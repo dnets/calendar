@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Календарь Сомы</title>
+
+    <!-- bootstrap css files -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="lib/jquery-ui-1.9.2.custom/css/smoothness/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+    <link href="lib/jquery-bootstrap-slider/css/bootstrap-slider.css" rel="stylesheet">
+    <link href="calendar.css" rel="stylesheet">
+    <!-- Odometr includes -->
+    <link rel="stylesheet" href="http://github.hubspot.com/odometer/themes/odometer-theme-default.css" />
+</head>
+
+<body onload="startTime()">
+
+    <div class="container">
+        <div class="text-center">
+            <div class="text-center mt-5">
+                <h1>Календарь Сомы</h1>
+            </div>
+        </div>
+        <div id="slider" class="my-1 invisible"></div>
+        <div class="row mb-2">
+            <div class="col text-center mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100"
+                    height="80" viewBox="0 0 73 73">
+                    <defs>
+                        <radialGradient id="RadialGrad" fx="50%" fy="50%" r="65%" spreadMethod="pad">
+                            <stop offset="0%" stop-color="#fffff0" stop-opacity="1" />
+                            <stop offset="100%" stop-color="#fffff0" stop-opacity="1" />
+                        </radialGradient>
+
+                    </defs>
+                    <clipPath id="circle-mask">
+                        <circle cx="35.5" cy="35.5" r="35">
+                    </clipPath>
+                    <g transform="rotate(-20 35.5 35.5)">
+                        <circle cx="35.5" cy="35.5" r="34.8" stroke="none" fill="url(#RadialGrad)" />
+
+                        <circle clip-path="url(#circle-mask)" id='layoverCircle' cx="35.5" cy="35.5" r="32"
+                            stroke="none" fill="black" />
+                        <mask>
+                            <circle id='layoverCircle' cx="35.5" cy="35.5" r="32" stroke="none" fill="black" />
+                        </mask>
+
+                        <rect id="layoverRectangle" style="display: none" width="100%" height="100%" />
+                        <!-- <animate id="youngMoon" attributeName="cx" values="35.5;-35.5;" begin="1s;oldMoon.end+1s" dur="10s" fill="freeze" /> -->
+                        <!-- <animate id="oldMoon" attributeName="cx" values="105;35.5;" begin="youngMoon.end+1s" dur="10s"  fill="freeze" />  -->
+
+                        <!-- </circle>  -->
+                    </g>
+                </svg>
+                <h5 class="phase" style="font-size: 1em"></h5>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col text-center mb-2">
+                <canvas id="stela" height="0"></canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <canvas id="stela" height="0"></canvas>
+                <h2 class="gregorian"></h2>
+                <h2 id="txt"></h2>
+                <h5 class="font-style-italic">Длинный счет</h5>
+                <h2 class="long"></h2>
+                <h5 class="font-style-italic">Цолькин</h5>
+                <h2 class="tzolkin"></h2>
+                <h5 class="font-style-italic">Хааб</h5>
+                <h2 class="haab"></h2>
+                <h5 class="font-style-italic">Владыка ночи</h5>
+                <h2 class="lord"></h2>
+                <h2 class="cal"></h2>
+                <h2 class="cal"></h2>
+                <h2 class="cal"></h2>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- requestAnimationFrame shim -->
+    <script src="lib/requestAnimationFrame.js"></script>
+
+    <!-- calendar conversion tool -->
+    <script src="lib/fourmilab/astro.js"></script>
+    <script src="lib/fourmilab/calendar.js"></script>
+
+    <!-- Mayan calendar code -->
+    <script src="mayan/calendar.js"></script>
+    <script src="mayan/glyphs.js"></script>
+    <script src="mayan/stela.js"></script>
+    <script src="mayan/counter.js"></script>
+    <script src="mayan/renderer.js"></script>
+    <script src="mayan/tests.js"></script>
+
+    <!-- user interface components -->
+    <script src="lib/jquery-1.8.3.min.js"></script>
+    <script src="lib/jquery-bootstrap-slider/js/jquery-ui.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+    <!-- odometer include -->
+    <script src="http://github.hubspot.com/odometer/odometer.js"></script>
+    <!-- calendar script -->
+    <script src="calendar.js"></script>
+    <!-- misc utility scripts -->
+    <script>
+        // zero-padding from: 
+        // http://stackoverflow.com/questions/1267283/how-can-i-create-a-zerofilled-value-using-javascript
+        function paddy(n, p, c) {
+            var pad_char = typeof c !== 'undefined' ? c : '0';
+            var pad = new Array(1 + p).join(pad_char);
+            return (pad + n).slice(-pad.length);
+        }
+
+        // get current date from:
+        // http://stackoverflow.com/questions/1531093/how-to-get-current-date-in-javascript
+        function todaysdate() {
+            var today = new Date();
+            var day = today.getDate();
+            var month = today.getMonth() + 1; //January is 0!
+            var year = today.getFullYear();
+            return [year, month, day];
+        }
+
+        // extra date conversion functions
+
+        function mayan_days_to_gregorian(count) {
+            return jd_to_gregorian(MAYAN_COUNT_EPOCH + count);
+        }
+
+        function gregorian_to_mayan_days(year, month, day) {
+            return gregorian_to_jd(year, month, day) - MAYAN_COUNT_EPOCH;
+        }
+
+        var mayan_days_to_gregorian_str = function (count) {
+            var greg = mayan_days_to_gregorian(count);
+            var year = greg[0];
+            var month = greg[1];
+            var day = greg[2];
+
+            var dayStr = paddy(day, 2);
+
+            var yearStr = "";
+            if (year <= 0) {
+                year = -year + 1;
+                yearStr += " BC";
+            }
+            else {
+                yearStr += " AD";
+            }
+            yearStr = paddy(year, 4) + yearStr;
+
+            var monthStr = [
+                "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",][month];
+
+            return monthStr + " " + dayStr + ", " + yearStr;
+        };
+
+        // custom function to refresh a Bootstrap Tooltip (in case its anchor has moved)
+        // (I copied the Tooltip.prototype.show method for the important bits)
+        var refreshTooltip = function (t) {
+            var $tip = t.tip();
+            $tip.find('.tooltip-inner')[t.options.html ? 'html' : 'text'](t.getTitle());
+
+            var placement = typeof t.options.placement == 'function' ?
+                t.options.placement.call(t, $tip[0], t.$element[0]) :
+                t.options.placement;
+            var inside = /in/.test(placement);
+            var pos = t.getPosition(inside);
+
+            actualWidth = $tip[0].offsetWidth;
+            actualHeight = $tip[0].offsetHeight;
+
+            switch (inside ? placement.split(' ')[1] : placement) {
+                case 'bottom':
+                    tp = { top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2 };
+                    break;
+                case 'top':
+                    tp = { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 };
+                    break;
+                case 'left':
+                    tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth };
+                    break;
+                case 'right':
+                    tp = { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width };
+                    break;
+            }
+
+            $tip.offset(tp);
+        };
+
+    </script>
+
+</body>
+
+</html>
