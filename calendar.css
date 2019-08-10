@@ -1,6 +1,8 @@
 body {
     background-image: url("https://source.unsplash.com/random/1900x1200/?amanita");
+    font-family: 'Source Sans Pro', sans-serif;
     color: #fffff0;
+    background-color: #000;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -11,11 +13,26 @@ canvas {
     margin-left: auto;
     display: block;
 }
+.hexagram {
+  font-family: 'Source Sans Pro', 'Lucida Grande', sans-serif;
+}
+#txt {
+  font-size: 10em;
+}
 
-h2, h5 {
+h2 {
+  margin-bottom: 0;
+  font-stretch: expanded;
+}
+h1, h2, h5 {
   text-align: center;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 h5 {
   font-style: italic;
+}
+.xdsoft_datetimepicker .xdsoft_noselect .xdsoft_dark .xdsoft_inline {
+  position: fixed;
+  top: 0;
+  right: 0;
 }

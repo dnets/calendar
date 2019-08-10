@@ -1,3 +1,16 @@
+var iChing = require('i-ching');
+
+window.startTime = function () {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =
+    h + ":" + m + ":" + s;
+  var t = setTimeout(window.startTime, 500);
+}
 // Moon phase
 function setState(value, showCircle, showRect) {
 
@@ -83,17 +96,6 @@ let callback = function () {
 };
 callback();
 
-function startTime() {
-  var today = new Date();
-  var h = today.getHours();
-  var m = today.getMinutes();
-  var s = today.getSeconds();
-  m = checkTime(m);
-  s = checkTime(s);
-  document.getElementById('txt').innerHTML =
-    h + ":" + m + ":" + s;
-  var t = setTimeout(startTime, 500);
-}
 function checkTime(i) {
   if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
   return i;
@@ -116,21 +118,65 @@ $(function () {
     sliderTooltip.options.title = text;
     refreshTooltip(sliderTooltip);
 
+
+    // Wrap every letter in a span
+    var textWrapper = document.querySelector('.long');
+    textWrapper.innerHTML = textWrapper.textContent.replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>");
+
+    // Custom
     console.log(renderer.targetCal);
+    $('#datetimepicker').datetimepicker({
+      format: 'd.m.YH:i',
+      inline: true,
+      lang: 'ru',
+      theme: 'dark',
+      style: 'position: fixed; top: 5px; right: 5px; box-shadow: none;',
+      timepicker: false,
+      onChangeDateTime: function (ct, $i) {
+        var d = $('#datetimepicker').datetimepicker('getValue');
+        console.log(d);
+        updateCount(gregorian_to_mayan_days.apply(null, todaysdate(d)));
+      },
+      onChangeMonth: function (ct, $i) {
+        var d = $('#datetimepicker').datetimepicker('getValue');
+        console.log(d);
+        updateCount(gregorian_to_mayan_days.apply(null, todaysdate(d)));
+      },
+      onChangeYear: function (ct, $i) {
+        var d = $('#datetimepicker').datetimepicker('getValue');
+        console.log(d);
+        updateCount(gregorian_to_mayan_days.apply(null, todaysdate(d)));
+      }
+      // TODO: Reuse this function
+    });
+    $('button.calendar').on('click', function () {
+      $('#datetimepicker').datetimepicker('toggle');
+      // Load all the glyph images and start animation when done
+      Mayan.loadGlyphs(function () {
+        renderer.stela.updateCanvasSize();
+        requestAnimationFrame(function () { renderer.render(); });
+      });
+    });
+    $('button.xdsoft_today_button').on('click', function () {
+      var d = $('#datetimepicker').datetimepicker('getValue');
+      console.log(d);
+      updateCount(gregorian_to_mayan_days.apply(null, todaysdate(d)));
+    });
     var date_now = new Date;
-    $('.gregorian').text(date_now.toDateString());
+    // $('.gregorian').text(date_now.toDateString());
     $('.long').text(renderer.targetCal.baktun + '.' + renderer.targetCal.katun + '.' + renderer.targetCal.tun + '.' + renderer.targetCal.winal + '.' + renderer.targetCal.kin);
     $('.tzolkin').text(renderer.targetCal.tzolkin.day + '.' + renderer.targetCal.tzolkin.num + ' (' + tzolkin_days[renderer.targetCal.tzolkin.day] + ')');
     $('.haab').text(renderer.targetCal.haab.day + '.' + renderer.targetCal.haab.month + ' (' + renderer.haab_months[renderer.targetCal.haab.month] + ')');
     $('.lord').text(renderer.targetCal.lords.lord);
-    // Wrap every letter in a span
-    var textWrapper = document.querySelector('.long');
-    textWrapper.innerHTML = textWrapper.textContent.replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>");
+    // I-Ching
+    // $('.hexagram.top').text(iChing.hexagram(29).topTrigram.character);
+    // $('.hexagram.bottom').text(iChing.hexagram(29).bottomTrigram.character);
+    // console.log(iChing.hexagram(3));
   };
 
 
   // Create an initial Mayan count representing today's date
-  var initialCount = gregorian_to_mayan_days.apply(null, todaysdate());
+  var initialCount = gregorian_to_mayan_days.apply(null, todaysdate(new Date()));
 
   // Initialize the slider
   $('#slider').slider({
