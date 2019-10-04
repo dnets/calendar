@@ -26,13 +26,13 @@ h2 {
 }
 h1, h2, h5 {
   text-align: center;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  text-shadow: -3px -3px 3px #000, 3px -3px 3px #000, -3px 3px 3px #000, 3px 3px 3px #000;
 }
 h5 {
   font-style: italic;
 }
 .xdsoft_datetimepicker .xdsoft_noselect .xdsoft_dark .xdsoft_inline {
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  right: 0;
+  right: 0; */
 }
