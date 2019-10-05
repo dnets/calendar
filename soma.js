@@ -17,8 +17,8 @@ class Soma {
 
 
     this.directions = ['юг', 'запад', 'север', 'восток'];
-    this.elements = ['земля', 'огонь', 'вода', 'воздух'];
-    this.suits = ['coins', 'clubs', 'cups', 'swords'];
+    this.elements = ['земля', 'воздух', 'вода', 'огонь'];
+    this.suits = ['pentacles', 'swords', 'cups', 'wands'];
 
 
     $('.day_indra').text(this.indra);
@@ -33,8 +33,26 @@ class Soma {
     this.somaCard();
   }
 
+  somaCard() {
+    $('.card_soma').attr('src', `img/tarot/minor/${this.suit}/${this.soma}.jpg`);
+  }
+
+  indraCard() {
+    if (this.indra <= 10) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
+      $('.card_indra_type').text('умопостигаемое');
+    } else if (this.indra <= 20) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
+      $('.card_indra_type').text('экзистенциональное');
+    } else if (this.indra <= 30) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.indra - 20}.jpg`);
+      $('.card_indra_type').attr('src', `img/tarot/major/${this.indra}.jpg`);
+      $('.card_indra_type').text('физическое');
+    }
+  }
+
   agniCard() {
-    $('.card_agni').attr('src', `img/tarot/major_${this.agni}.jpg`);
+    $('.card_agni').attr('src', `img/tarot/major/${this.agni}.jpg`);
     if (this.agni <= 10) {
       $('.card_agni_type').text('умопостигаемое');
     } else if (this.agni <= 20) {
@@ -42,22 +60,6 @@ class Soma {
     }
   }
 
-  indraCard() {
-    if (this.indra <= 10) {
-      $('.card_indra').attr('src', `img/tarot/major_${this.indra}.jpg`);
-      $('.card_indra_type').text('умопостигаемое');
-    } else if (this.indra <= 20) {
-      $('.card_indra').attr('src', `img/tarot/major_${this.indra}.jpg`);
-      $('.card_indra_type').text('экзистенциональное');
-    } else if (this.indra <= 30) {
-      $('.card_indra').attr('src', `img/tarot/major_${this.indra - 20}.jpg`);
-      $('.card_indra_type').attr('src', `img/tarot/major_${this.indra}.jpg`);
-      $('.card_indra_type').text('физическое');
-    }
-  }
-  somaCard() {
-    $('.card_soma').attr('src', `img/tarot/${this.suit}_${this.soma}.jpg`);
-  }
   daysBetween(StartDate, EndDate) {
     // The number of milliseconds in all UTC days (no DST)
     const oneDay = 1000 * 60 * 60 * 24;
