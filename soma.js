@@ -40,12 +40,15 @@ class Soma {
   indraCard() {
     if (this.indra <= 10) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.indra}.htm`);
       $('.card_indra_type').text('умопостигаемое');
     } else if (this.indra <= 20) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra}.htm`);
       $('.card_indra_type').text('экзистенциональное');
     } else if (this.indra <= 30) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra - 20}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.indra - 20}.htm`);
       $('.card_indra_type').attr('src', `img/tarot/major/${this.indra}.jpg`);
       $('.card_indra_type').text('физическое');
     }
@@ -55,8 +58,12 @@ class Soma {
     $('.card_agni').attr('src', `img/tarot/major/${this.agni}.jpg`);
     if (this.agni <= 10) {
       $('.card_agni_type').text('умопостигаемое');
+      $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.agni}.htm`);
     } else if (this.agni <= 20) {
       $('.card_agni_type').text('экзистенциональное');
+      $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.agni}.htm`);
+    } else {
+      $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.agni}.htm`);
     }
   }
 
