@@ -16,17 +16,13 @@ class Soma {
     this.startDaySoma = 12;
 
 
-    this.directions = ['юг', 'запад', 'север', 'восток'];
-    this.elements = ['земля', 'воздух', 'вода', 'огонь'];
-    this.suits = ['pentacles', 'swords', 'cups', 'wands'];
+    this.suits = ['wands', 'cups', 'swords', 'pentacles'];
 
 
     $('.day_indra').text(this.indra);
     $('.day_agni').text(this.agni);
     $('.day_soma').text(this.soma);
     $('.day_tzolkin').text(this.tzolkin);
-    $('.day_direction').text(this.direction);
-    $('.day_element').text(this.element);
     $('.day_calendar').text(this.toString());
     this.agniCard();
     this.indraCard();
@@ -38,30 +34,25 @@ class Soma {
   }
 
   indraCard() {
-    if (this.indra <= 10) {
+    if (this.indra < 10) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.indra}.htm`);
-      $('.card_indra_type').text('умопостигаемое');
-    } else if (this.indra <= 20) {
+    } else if (this.indra == 10) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra}.htm`);
-      $('.card_indra_type').text('экзистенциональное');
+    } else if (this.indra <= 20) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.indra - 10}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra - 10}.htm`);
     } else if (this.indra <= 30) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra - 20}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.indra - 20}.htm`);
-      $('.card_indra_type').attr('src', `img/tarot/major/${this.indra}.jpg`);
-      $('.card_indra_type').text('физическое');
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra - 20}.htm`);
     }
   }
 
   agniCard() {
     $('.card_agni').attr('src', `img/tarot/major/${this.agni}.jpg`);
-    if (this.agni <= 10) {
-      $('.card_agni_type').text('умопостигаемое');
+    if (this.agni < 10) {
       $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.agni}.htm`);
-    } else if (this.agni <= 20) {
-      $('.card_agni_type').text('экзистенциональное');
-      $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.agni}.htm`);
     } else {
       $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.agni}.htm`);
     }
@@ -79,14 +70,8 @@ class Soma {
   get indra() { return ((this.startDayIndra + this.daysPassed) % this.indraCycleLength) + 1; }
   get agni() { return ((this.startDayAgni + this.daysPassed) % this.agniCycleLength) + 1; }
   get soma() { return ((this.startDaySoma + this.daysPassed) % this.somaCycleLength) + 1; }
-  get direction() {
-    return this.directions[this.soma % 4];
-  }
-  get element() {
-    return this.elements[this.soma % 4];
-  }
   get suit() {
-    return this.suits[this.soma % 4];
+    return this.suits[(this.soma - 1) % 4];
   }
   get tzolkin() {
     return `${this.soma}.${this.agni}`;
