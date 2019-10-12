@@ -40,10 +40,16 @@ class Soma {
     } else if (this.indra == 10) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra}.htm`);
-    } else if (this.indra <= 20) {
+    } else if (this.indra < 20) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.indra - 10}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.indra - 10}.htm`);
+    } else if (this.indra == 20) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra - 10}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra - 10}.htm`);
-    } else if (this.indra <= 30) {
+    } else if (this.indra < 30) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.indra - 20}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.indra - 20}.htm`);
+    } else if (this.indra == 30) {
       $('.card_indra').attr('src', `img/tarot/major/${this.indra - 20}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.indra - 20}.htm`);
     }
