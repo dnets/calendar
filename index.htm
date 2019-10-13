@@ -24,13 +24,13 @@
     <div id="datetimepicker-wrapper" style="display:none">
       <input type="text" id="datetimepicker" />
     </div>
-    <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#exampleModalLong">
+    <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#projector_modal">
       Расчёт даты
     </button>
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+  <div class="modal fade" id="projector_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-lg projector" role="document">
       <div class="modal-content">
@@ -61,28 +61,33 @@
           <div class="row">
             <div class="col text-center">
               <div class="form-group">
-                <input id="projector_soma" type="text" class="form-controls">
+                <input id="projector_soma" type="number" class="form-controls" min="0" max="12" value="1">
               </div>
             </div>
             <div class="col text-center">
               <div class="form-group">
-                <input id="projector_indra" type="text" class="form-controls">
+                <input id="projector_indra" type="number" class="form-controls" min="0" max="30" value="1">
               </div>
             </div>
             <div class="col text-center">
               <div class="form-group">
-                <input id="projector_agni" type="text" class="form-controls">
+                <input id="projector_agni" type="number" class="form-controls" min="0" max="21" value="1">
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col text-center">
-              кол-во циклов
+            <div class="col text-right">
+              <p><small><em>0 - любое значение</em></small></p>
             </div>
           </div>
           <div class="row">
             <div class="col text-center">
-              <input id="projector_cycles" type="text" class="form-controls">
+              <p>кол-во циклов</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col text-center">
+              <input id="projector_cycles" type="number" min="0" value="1" class="form-controls">
             </div>
           </div>
           <div class="row mt-2">
@@ -98,7 +103,6 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
         </div>
       </div>
     </div>
