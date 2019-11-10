@@ -52,18 +52,12 @@ class CalendarView {
     } else if (this.calendar.indra == 10) {
       $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra}.htm`);
-    } else if (this.calendar.indra < 20) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra - 10}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indra - 10}.htm`);
-    } else if (this.calendar.indra == 20) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra - 10}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra - 10}.htm`);
-    } else if (this.calendar.indra < 30) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra - 20}.jpg`);
+    } else if (this.calendar.indra <= 22) {
+      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra}.htm`);
+    } else if (this.calendar.indra <= 30) {
+      $('.card_indra').attr('src', `img/tarot/blank.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indra - 20}.htm`);
-    } else if (this.calendar.indra == 30) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra - 20}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra - 20}.htm`);
     }
   }
 
@@ -72,7 +66,7 @@ class CalendarView {
     if (this.calendar.agni < 10) {
       $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.agni}.htm`);
     } else {
-      $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.agni}.htm`);
+      $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.agni}.htm`);
     }
   }
 }
