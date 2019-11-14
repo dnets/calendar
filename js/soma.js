@@ -116,7 +116,7 @@ class CalendarView {
 }
 
 class ProjectorDate {
-  constructor(positions_, cycles = 1) {
+  constructor(positions, cycles = 1) {
     if (
       (positions[0] > 12 || positions[1] > 30 || positions[2] > 21)
       ||
