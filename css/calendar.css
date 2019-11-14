@@ -7,7 +7,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-#projector {
+.projector, .overview {
   color: #000;
   background-color: #fff;
 }
@@ -39,6 +39,39 @@ h2 {
 .calendar h1, .calendar h2, .calendar h5 {
   text-align: center;
   text-shadow: -3px -3px 3px #000, 3px -3px 3px #000, -3px 3px 3px #000, 3px 3px 3px #000;
+}
+.totalcycle {
+  width: 420px;
+  height: 100px;
+  line-height: 10px;
+  margin: 0 auto;
+}
+.totalcycle_indra {
+  width: 385px;
+  height: 100px;
+}
+.totalcycle_soma {
+  width: 380px;
+  height: 100px;
+}
+.totalcycle_agni {
+  width: 650px;
+  height: 100px;
+}
+.square {
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgba(0,0,0,1);
+  background: rgba(0,0,0,0);
+  display: inline-block;
+  margin-top: 5px;
+  margin-left: 1px;
+  box-sizing: border-box;
+}
+.square.active {
+  background:#000;
+  border: 1px solid #000;
+
 }
 .projector {
   color: #000;

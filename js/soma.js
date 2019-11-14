@@ -6,9 +6,11 @@ class CalendarSoma {
     this.agniCycleLength = 21;
     this.indraCycleLength = 30;
     this.somaCycleLength = 12;
+    this.totalCycleLength = 420;
     this.startDayAgni = 21;
     this.startDayIndra = 30;
     this.startDaySoma = 12;
+    this.startDayCycle = 1;
     this.suits = ['wands', 'cups', 'swords', 'pentacles'];
   }
   daysBetween(StartDate, EndDate) {
@@ -23,6 +25,7 @@ class CalendarSoma {
   get indra() { return ((this.startDayIndra + this.daysPassed) % this.indraCycleLength) + 1; }
   get agni() { return ((this.startDayAgni + this.daysPassed) % this.agniCycleLength) + 1; }
   get soma() { return ((this.startDaySoma + this.daysPassed) % this.somaCycleLength) + 1; }
+  get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength); }
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
   toString() { return `${this.soma}.${this.indra}.${this.agni}`; }
@@ -31,6 +34,7 @@ class CalendarSoma {
 class CalendarView {
   constructor(date = new Date) {
     this.calendar = new CalendarSoma(date);
+    this.clear();
     $('.day_indra').text(this.calendar.indra);
     $('.day_agni').text(this.calendar.agni);
     $('.day_soma').text(this.calendar.soma);
@@ -39,6 +43,15 @@ class CalendarView {
     this.agniCard();
     this.indraCard();
     this.somaCard();
+    this.totalCycleIndra();
+    this.totalCycleSoma();
+    this.totalCycleAgni();
+  }
+
+  clear() {
+    $('.totalcycle_indra').html('');
+    $('.totalcycle_agni').html('');
+    $('.totalcycle_soma').html('');
   }
 
   somaCard() {
@@ -69,10 +82,41 @@ class CalendarView {
       $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.agni}.htm`);
     }
   }
+
+  totalCycleIndra() {
+    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
+      if (i % 10 == 0) {
+        $('.totalcycle_indra').append('<div class="square mr-1 totalcycle_indra_' + i + '"></div>');
+      } else {
+        $('.totalcycle_indra').append('<div class="square totalcycle_indra_' + i + '"></div>');
+      }
+    }
+    $('.totalcycle_indra_' + this.calendar.todayCycle).addClass('active');
+  }
+  totalCycleSoma() {
+    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
+      if (i % 12 == 0) {
+        $('.totalcycle_soma').append('<div class="square mr-1 totalcycle_soma_' + i + '"></div>');
+      } else {
+        $('.totalcycle_soma').append('<div class="square totalcycle_soma_' + i + '"></div>');
+      }
+    }
+    $('.totalcycle_soma_' + this.calendar.todayCycle).addClass('active');
+  }
+  totalCycleAgni() {
+    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
+      if (i % 21 == 0) {
+        $('.totalcycle_agni').append('<div class="square mr-1 totalcycle_agni_' + i + '"></div>');
+      } else {
+        $('.totalcycle_agni').append('<div class="square totalcycle_agni_' + i + '"></div>');
+      }
+    }
+    $('.totalcycle_agni_' + this.calendar.todayCycle).addClass('active');
+  }
 }
 
 class ProjectorDate {
-  constructor(positions, cycles = 1) {
+  constructor(positions_, cycles = 1) {
     if (
       (positions[0] > 12 || positions[1] > 30 || positions[2] > 21)
       ||

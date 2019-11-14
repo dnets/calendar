@@ -24,6 +24,9 @@
     <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#projector_modal">
       Поиск даты
     </button>
+    <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#overview_modal">
+      Обзор цикла
+    </button>
     <div id="datetimepicker-wrapper" style="display:none">
       <input type="text" id="datetimepicker" />
     </div>
@@ -108,6 +111,45 @@
     </div>
   </div>
 
+  <div class="modal fade" id="overview_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg overview" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Обзор Цикла</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col text-center">
+              <h4>
+                Сома
+              </h4>
+              <div class="totalcycle totalcycle_soma"></div>
+            </div>
+            <div class="col text-center">
+              <h4>
+                Индра
+              </h4>
+              <div class="totalcycle totalcycle_indra"></div>
+            </div>
+            <div class="col text-center">
+              <h4>
+                Агни
+              </h4>
+              <div class="totalcycle totalcycle_agni"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container calendar">
     <div class="text-center">
       <div class="text-center mt-5">
@@ -159,25 +201,6 @@
           Агни
         </h2>
         <h2 class="day_agni">Не определено!</h2>
-      </div>
-    </div>
-    <div class="row text-center mt-4">
-      <div class="col">
-        <hr />
-        <h2>
-          Цолькин
-        </h2>
-      </div>
-    </div>
-    <div class="row text-center">
-      <div class="col">
-        <h2 class="day_tzolkin">
-          Не определено!
-        </h2>
-      </div>
-    </div>
-    <div class="row text-center">
-      <div class="col">
       </div>
     </div>
   </div>
