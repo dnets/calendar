@@ -40,6 +40,10 @@ class CalendarView {
     $('.day_soma').text(this.calendar.soma);
     $('.day_tzolkin').text(this.calendar.tzolkin);
     $('.day_calendar').text(this.calendar.toString());
+    $('.totalcycle_day_today').html('День ' + this.calendar.todayCycle);
+    $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + Math.ceil(this.calendar.todayCycle / this.calendar.somaCycleLength) + ' цикла');
+    $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + Math.ceil(this.calendar.todayCycle / this.calendar.indraCycleLength) + ' цикла');
+    $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + Math.ceil(this.calendar.todayCycle / this.calendar.agniCycleLength) + ' цикла');
     this.agniCard();
     this.indraCard();
     this.somaCard();
@@ -52,6 +56,7 @@ class CalendarView {
     $('.totalcycle_indra').html('');
     $('.totalcycle_agni').html('');
     $('.totalcycle_soma').html('');
+    $('.totalcycle_day_today').html('');
   }
 
   somaCard() {
@@ -82,6 +87,7 @@ class CalendarView {
       $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.agni}.htm`);
     }
   }
+
 
   totalCycleIndra() {
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
