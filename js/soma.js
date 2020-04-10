@@ -13,6 +13,15 @@ class CalendarSoma {
     this.startDayCycle = 1;
     this.suits = ['wands', 'cups', 'swords', 'pentacles'];
   }
+
+  addOrSubtractDays(startingDate, number, add) {
+    if (add) {
+      return new Date(new Date().setDate(startingDate.getDate() + number));
+    } else {
+      return new Date(new Date().setDate(startingDate.getDate() - number));
+    }
+  }
+
   daysBetween(StartDate, EndDate) {
     // The number of milliseconds in all UTC days (no DST)
     const oneDay = 1000 * 60 * 60 * 24;
@@ -25,7 +34,10 @@ class CalendarSoma {
   get indra() { return ((this.startDayIndra + this.daysPassed) % this.indraCycleLength) + 1; }
   get agni() { return ((this.startDayAgni + this.daysPassed) % this.agniCycleLength) + 1; }
   get soma() { return ((this.startDaySoma + this.daysPassed) % this.somaCycleLength) + 1; }
-  get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength); }
+  get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength) || 420; }
+  get somaCycle() { return Math.ceil((this.todayCycle / this.somaCycleLength)) || 20; }
+  get indraCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 14; }
+  get agniCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 25; }
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
   toString() { return `${this.soma}.${this.indra}.${this.agni}`; }
@@ -40,16 +52,10 @@ class CalendarView {
     $('.day_soma').text(this.calendar.soma);
     $('.day_tzolkin').text(this.calendar.tzolkin);
     $('.day_calendar').text(this.calendar.toString());
-    $('.totalcycle_day_today').html('День ' + this.calendar.todayCycle);
-    $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + Math.ceil(this.calendar.todayCycle / this.calendar.somaCycleLength) + ' цикла');
-    $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + Math.ceil(this.calendar.todayCycle / this.calendar.indraCycleLength) + ' цикла');
-    $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + Math.ceil(this.calendar.todayCycle / this.calendar.agniCycleLength) + ' цикла');
     this.agniCard();
     this.indraCard();
     this.somaCard();
-    this.totalCycleIndra();
-    this.totalCycleSoma();
-    this.totalCycleAgni();
+    this.renderTotalCycles();
   }
 
   clear() {
@@ -89,35 +95,85 @@ class CalendarView {
   }
 
 
-  totalCycleIndra() {
+  renderTotalCycles() {
+    $('.totalcycle_day_today').html('День ' + this.calendar.todayCycle);
+    $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + this.calendar.somaCycle + ' цикла');
+    $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + this.calendar.indraCycle + ' цикла');
+    $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + this.calendar.agniCycle + ' цикла');
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 10 == 0) {
-        $('.totalcycle_indra').append('<div class="square mr-1 totalcycle_indra_' + i + '"></div>');
+        $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_indra_' + i + '"></div><div class="v-spacer"></div>');
       } else {
-        $('.totalcycle_indra').append('<div class="square totalcycle_indra_' + i + '"></div>');
+        $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_indra_' + i + '"></div>');
       }
     }
     $('.totalcycle_indra_' + this.calendar.todayCycle).addClass('active');
-  }
-  totalCycleSoma() {
+
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 12 == 0) {
-        $('.totalcycle_soma').append('<div class="square mr-1 totalcycle_soma_' + i + '"></div>');
+        $('.totalcycle_soma').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_soma_' + i + '"></div><div class="v-spacer"></div>');
       } else {
-        $('.totalcycle_soma').append('<div class="square totalcycle_soma_' + i + '"></div>');
+        $('.totalcycle_soma').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_soma_' + i + '"></div>');
       }
     }
     $('.totalcycle_soma_' + this.calendar.todayCycle).addClass('active');
-  }
-  totalCycleAgni() {
+
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 21 == 0) {
-        $('.totalcycle_agni').append('<div class="square mr-1 totalcycle_agni_' + i + '"></div>');
+        $('.totalcycle_agni').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_agni_' + i + '"></div><div class="v-spacer"></div>');
       } else {
-        $('.totalcycle_agni').append('<div class="square totalcycle_agni_' + i + '"></div>');
+        $('.totalcycle_agni').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_agni_' + i + '"></div>');
       }
     }
     $('.totalcycle_agni_' + this.calendar.todayCycle).addClass('active');
+
+    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
+      $(
+        '.totalcycle_soma_' + i
+        + ', .totalcycle_indra_' + i
+        + ', .totalcycle_agni_' + i
+      ).attr('data-date', this.calendar.addOrSubtractDays(this.calendar.date, Math.abs(i - this.calendar.todayCycle), i > this.calendar.todayCycle).toLocaleDateString('ru-RU'))
+        .attr('data-soma', ((i - 1) % this.calendar.somaCycleLength) + 1)
+        .attr('data-indra', ((i - 1) % this.calendar.indraCycleLength) + 1)
+        .attr('data-agni', ((i - 1) % this.calendar.agniCycleLength) + 1);
+
+      $('.totalcycle_soma_' + i).addClass(
+        'side'+ (i % 4)
+      );
+      $('.totalcycle_soma_' + i).attr('title',
+        $('.totalcycle_soma_' + i).data('date') + '\n'
+        + 'День ' + i + '\n'
+        + $('.totalcycle_soma_' + i).attr('data-soma') + '.'
+        + $('.totalcycle_soma_' + i).attr('data-indra') + '.'
+        + $('.totalcycle_soma_' + i).attr('data-agni') + '\n'
+        + $('.totalcycle_soma_' + i).attr('data-soma') + ' день '
+        + (Math.ceil(i / this.calendar.somaCycleLength) || 20) + ' цикла'
+      );
+      $('.totalcycle_indra_' + i).addClass(
+        'side'+ (i % 4)
+      );
+      $('.totalcycle_indra_' + i).attr('title',
+        $('.totalcycle_indra_' + i).data('date') + '\n'
+        + 'День ' + i + '\n'
+        + $('.totalcycle_indra_' + i).attr('data-soma') + '.'
+        + $('.totalcycle_indra_' + i).attr('data-indra') + '.'
+        + $('.totalcycle_indra_' + i).attr('data-agni') + '\n'
+        + $('.totalcycle_indra_' + i).attr('data-indra') + ' день '
+        + (Math.ceil(i / this.calendar.indraCycleLength) || 20) + ' цикла'
+      );
+      $('.totalcycle_agni_' + i).addClass(
+        'side'+ (i % 4)
+      );
+      $('.totalcycle_agni_' + i).attr('title',
+        $('.totalcycle_agni_' + i).data('date') + '\n'
+        + 'День ' + i + '\n'
+        + $('.totalcycle_agni_' + i).attr('data-soma') + '.'
+        + $('.totalcycle_agni_' + i).attr('data-indra') + '.'
+        + $('.totalcycle_agni_' + i).attr('data-agni') + '\n'
+        + $('.totalcycle_agni_' + i).attr('data-agni') + ' день '
+        + (Math.ceil(i / this.calendar.agniCycleLength) || 20) + ' цикла'
+      );
+    }
   }
 }
 
@@ -214,6 +270,11 @@ $(function () {
     soma = new CalendarView(d);
   });
 
+  $('#overview-btn').on('click', function () {
+    calendar.clear();
+    calendar.renderTotalCycles();
+    $('[data-toggle="tooltip"]').tooltip();
+  });
   $('#projector_submit').on('click', function () {
     $('#projector_results').html('');
     projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
@@ -229,7 +290,7 @@ $(function () {
 
   $('body').on('click', 'button.projected_link', function () {
     var d = $(this).find('.projected_date').html();
-    soma = new CalendarView(new Date(stringToDate(d)));
+    calendar = new CalendarView(new Date(stringToDate(d)));
     // $('#datetimepicker').datetimepicker("setDate", stringToDate(d));
     $('#datetimepicker').datetimepicker({
       format: 'd.m.Y',

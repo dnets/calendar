@@ -13,20 +13,37 @@
   <link href="css/calendar.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
   <!-- Button trigger modal -->
   <div class="fixed-top m-3">
     <a href="javascript:void(0)" class="btn btn-light mb-2"
-      onclick="var si = document.getElementById('datetimepicker-wrapper').style; si.display = (si.display=='none')?'block':'none';return false; ">Выбрать
+      onclick="var si = document.getElementById('datetimepicker-wrapper').style; si.display = (si.display=='none')?'block':'none';return false; ">
+    <i class="tiny material-icons ">alarm_on</i>
+      Выбрать
       дату</a>
     <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#projector_modal">
+    <i class="tiny material-icons ">search</i>
       Поиск даты
     </button>
-    <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#overview_modal">
+    <button type="button" id="overview-btn" class="mb-2 ml-1 btn btn-light" data-toggle="modal"
+      data-target="#overview_modal">
+      <i class="material-icons">adjust</i>
       Обзор цикла
     </button>
+    <!-- <button type="button" id="planetarium-btn" class="mb-2 ml-1 btn btn-light" data-toggle="modal"
+      data-target="#overview_modal">
+      <i class="material-icons">brightness_7</i>
+      Планетарий
+      <i class="material-icons" style="
+      float:right; 
+      padding-right: -15px;
+      position: relative;
+      right: -13px;
+      opacity: .3;">zoom_out_map</i> 
+    </button> -->
     <div id="datetimepicker-wrapper" style="display:none">
       <input type="text" id="datetimepicker" />
     </div>
