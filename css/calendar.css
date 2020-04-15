@@ -12,11 +12,11 @@ body {
   background-color: #fff;
 }
 
-.btn {
+.fixed-top .btn {
   background: #fffffa !important;
   border: #ffffff !important;
 }
-.btn:hover {
+.fixed-top .btn:hover {
   background: #e9d66b !important;
   border: #e9d66b !important;
 }
@@ -55,30 +55,39 @@ h2 {
   margin: 0 auto;
 }
 .totalcycle_indra {
-  width: 550px;
+  width: 690px;
   height: 100px;
 }
 .totalcycle_soma {
-  width: 460px;
+  width: 580px;
   height: 100px;
 }
 .totalcycle_agni {
-  width: 780px;
+  width: 990px;
   height: 100px;
+ }
+.overview-cards-section img {
+  width: 100px;
+  height: auto;
+  padding: 2px;
+  position: relative;
+  left: 20px;
+  margin-right: 40px;
+  border: 2px solid white !important;
 }
 .square.active {
   transform: scale(2);
   border: 1px solid black;
 }
 .square {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   display: inline-block;
   margin-top: 5px;
   margin-left: 1px;
   border-radius: 100%;
   box-sizing: border-box;
-  cursor: none;
+  cursor: pointer;
   transition: all .5s;
   border: 1px solid black;
 }
@@ -90,7 +99,9 @@ h2 {
   margin-right: 3px;
 }
 .square:hover {
-  transform: scale(3);
+  transform: scale(2);
+  background: #252525 !important;
+  border: none !important;
 }
 
 .material-icons {
@@ -152,4 +163,7 @@ img.tarot {
 .xdsoft_datetimepicker.xdsoft_inline {
   border-radius: 5px;
   box-shadow: 4px 4px 0px 0 #0e0e0e;
+}
+.modal-dialog {
+  max-width: 1100px !important;
 }

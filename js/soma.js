@@ -37,7 +37,7 @@ class CalendarSoma {
   get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength) || 420; }
   get somaCycle() { return Math.ceil((this.todayCycle / this.somaCycleLength)) || 20; }
   get indraCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 14; }
-  get agniCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 25; }
+  get agniCycle() { return Math.ceil((this.todayCycle / this.agniCycleLength)) || 21; }
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
   toString() { return `${this.soma}.${this.indra}.${this.agni}`; }
@@ -66,27 +66,27 @@ class CalendarView {
   }
 
   somaCard() {
-    $('.card_soma').attr('src', `img/tarot/minor/${this.calendar.suit}/${this.calendar.soma}.jpg`);
+    $('.card_soma, .card_soma_overview').attr('src', `img/tarot/minor/${this.calendar.suit}/${this.calendar.soma}.jpg`);
   }
 
   indraCard() {
     if (this.calendar.indra < 10) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indra}.htm`);
     } else if (this.calendar.indra == 10) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra}.htm`);
     } else if (this.calendar.indra <= 22) {
-      $('.card_indra').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra}.htm`);
     } else if (this.calendar.indra <= 30) {
-      $('.card_indra').attr('src', `img/tarot/blank.jpg`);
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/blank.jpg`);
       $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indra - 20}.htm`);
     }
   }
 
   agniCard() {
-    $('.card_agni').attr('src', `img/tarot/major/${this.calendar.agni}.jpg`);
+    $('.card_agni, .card_agni_overview').attr('src', `img/tarot/major/${this.calendar.agni}.jpg`);
     if (this.calendar.agni < 10) {
       $('.link_agni').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.agni}.htm`);
     } else {
@@ -95,11 +95,17 @@ class CalendarView {
   }
 
 
-  renderTotalCycles() {
+  renderTotalCycles(writeCycles = true) {
+    this.somaCard();
+    this.indraCard();
+    this.agniCard();
     $('.totalcycle_day_today').html('День ' + this.calendar.todayCycle);
+    $('.totalcycle_day_positions').html(this.calendar.soma+'.'+this.calendar.indra+'.'+this.calendar.agni);
     $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + this.calendar.somaCycle + ' цикла');
     $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + this.calendar.indraCycle + ' цикла');
     $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + this.calendar.agniCycle + ' цикла');
+    if (writeCycles) {
+
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 10 == 0) {
         $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_indra_' + i + '"></div><div class="v-spacer"></div>');
@@ -135,7 +141,8 @@ class CalendarView {
       ).attr('data-date', this.calendar.addOrSubtractDays(this.calendar.date, Math.abs(i - this.calendar.todayCycle), i > this.calendar.todayCycle).toLocaleDateString('ru-RU'))
         .attr('data-soma', ((i - 1) % this.calendar.somaCycleLength) + 1)
         .attr('data-indra', ((i - 1) % this.calendar.indraCycleLength) + 1)
-        .attr('data-agni', ((i - 1) % this.calendar.agniCycleLength) + 1);
+        .attr('data-agni', ((i - 1) % this.calendar.agniCycleLength) + 1)
+        .attr('data-number', i);
 
       $('.totalcycle_soma_' + i).addClass(
         'side'+ (i % 4)
@@ -172,7 +179,8 @@ class CalendarView {
         + $('.totalcycle_agni_' + i).attr('data-agni') + '\n'
         + $('.totalcycle_agni_' + i).attr('data-agni') + ' день '
         + (Math.ceil(i / this.calendar.agniCycleLength) || 20) + ' цикла'
-      );
+        );
+      }
     }
   }
 }
@@ -239,7 +247,29 @@ const stringToDate = function (dateString) {
   return new Date(`${yyyy}-${mm}-${dd}`);
 };
 
-$(function () {
+$(document).ready(function () {
+  $('#overview-btn').on('click', function () {
+    calendar.clear();
+    calendar.renderTotalCycles();
+    $('[data-toggle="tooltip"]').tooltip({ });
+  }); 
+  //  $('[data-toggle="tooltip"]').on('shown.bs.tooltip', function () {
+  //   console.log('show tooltip');
+
+  //   }
+  // );
+  $('#projector_submit').on('click', function () {
+    $('#projector_results').html('');
+    projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
+    $('#projector_results').append('<hr>');
+    if (projector.error) {
+      $('#projector_results').append('<li>Позиции заданы неверно!</li>');
+    } else {
+      projector.dateList.forEach(element => {
+        $('#projector_results').append('<button class="btn btn-light mx-3 mb-3 projected_link"><div><strong>' + element.positions + '</strong></div>' + '<span class="projected_date">' + element.date + '</span></div></button>');
+      });
+    }
+  });
   var calendar = new CalendarView;
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
@@ -270,23 +300,6 @@ $(function () {
     soma = new CalendarView(d);
   });
 
-  $('#overview-btn').on('click', function () {
-    calendar.clear();
-    calendar.renderTotalCycles();
-    $('[data-toggle="tooltip"]').tooltip();
-  });
-  $('#projector_submit').on('click', function () {
-    $('#projector_results').html('');
-    projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
-    $('#projector_results').append('<hr>');
-    if (projector.error) {
-      $('#projector_results').append('<li>Позиции заданы неверно!</li>');
-    } else {
-      projector.dateList.forEach(element => {
-        $('#projector_results').append('<button class="btn btn-light mx-3 mb-3 projected_link"><div><strong>' + element.positions + '</strong></div>' + '<span class="projected_date">' + element.date + '</span></div></button>');
-      });
-    }
-  });
 
   $('body').on('click', 'button.projected_link', function () {
     var d = $(this).find('.projected_date').html();
@@ -312,5 +325,26 @@ $(function () {
       }
     });
     $('#projector_modal').modal('hide');
+  });
+  $('body').on('show.bs.tooltip', '.square', function () {
+    var suits = ['pentacles', 'wands', 'cups', 'swords'];
+    $('.card_soma_overview').attr('src', `img/tarot/minor/${suits[($(this).data('number') % 4)] }/${$(this).data('soma')}.jpg`);
+
+    if ($(this).data('indra') < 10) {
+      $('.card_indra_overview').attr('src', `img/tarot/major/${$(this).data('indra')}.jpg`);
+    } else if ($(this).data('indra') == 10) {
+      $('.card_indra_overview').attr('src', `img/tarot/major/${$(this).data('indra')}.jpg`);
+    } else if ($(this).data('indra') <= 22) {
+      $('.card_indra_overview').attr('src', `img/tarot/major/${$(this).data('indra')}.jpg`);
+    } else if ($(this).data('indra') <= 30) {
+      $('.card_indra_overview').attr('src', `img/tarot/blank.jpg`);
+    }
+
+    $('.card_agni_overview').attr('src', `img/tarot/major/${$(this).data('agni')}.jpg`);
+    $('.totalcycle_day_today').html('День ' + $(this).data('number'));
+    $('.totalcycle_day_positions').html($(this).data('soma')+'.'+$(this).data('indra')+'.'+$(this).data('agni'));
+  });
+  $('body').on('hide.bs.tooltip', '.square', function () {
+    calendar.renderTotalCycles(false);
   });
 });
