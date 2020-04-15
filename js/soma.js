@@ -193,7 +193,6 @@ class ProjectorDate {
       (positions[0] < 0 || positions[1] < 0 || positions[2] < 0)) {
       return { error: true };
     }
-    console.log(positions);
     this.dates = [];
     this.next_date = new Date();
     this.soma_projected = new CalendarSoma(this.next_date);
@@ -247,17 +246,22 @@ const stringToDate = function (dateString) {
   return new Date(`${yyyy}-${mm}-${dd}`);
 };
 
+$(document).mouseup(function(e) 
+{
+    var container = $("#datetimepicker-wrapper");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+        container.hide();
+    }
+});
 $(document).ready(function () {
   $('#overview-btn').on('click', function () {
     calendar.clear();
     calendar.renderTotalCycles();
     $('[data-toggle="tooltip"]').tooltip({ });
   }); 
-  //  $('[data-toggle="tooltip"]').on('shown.bs.tooltip', function () {
-  //   console.log('show tooltip');
-
-  //   }
-  // );
   $('#projector_submit').on('click', function () {
     $('#projector_results').html('');
     projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));

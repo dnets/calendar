@@ -100,7 +100,6 @@ h2 {
 }
 .square:hover {
   transform: scale(2);
-  background: #252525 !important;
   border: none !important;
 }
 
