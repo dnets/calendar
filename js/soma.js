@@ -12,6 +12,7 @@ class CalendarSoma {
     this.startDaySoma = 12;
     this.startDayCycle = 1;
     this.suits = ['wands', 'cups', 'swords', 'pentacles'];
+    this.directions = ['east', 'north', 'west', 'south'];
   }
 
   addOrSubtractDays(startingDate, number, add) {
@@ -39,6 +40,7 @@ class CalendarSoma {
   get indraCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 14; }
   get agniCycle() { return Math.ceil((this.todayCycle / this.agniCycleLength)) || 21; }
   get suit() { return this.suits[(this.soma - 1) % 4]; }
+  get direction() { return this.directions[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
   toString() { return `${this.soma}.${this.indra}.${this.agni}`; }
 }
@@ -56,6 +58,7 @@ class CalendarView {
     this.indraCard();
     this.somaCard();
     this.renderTotalCycles();
+    $('.day_gregorian').text(''+this.calendar.date.toLocaleDateString('ru-RU')+'');
   }
 
   clear() {
@@ -104,8 +107,9 @@ class CalendarView {
     $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + this.calendar.somaCycle + ' цикла');
     $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + this.calendar.indraCycle + ' цикла');
     $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + this.calendar.agniCycle + ' цикла');
+    $('#planetarium-btn').attr('href', 'planetarium/embed.html?direction=' + this.calendar.direction +'&date=' + this.calendar.date.toString());
+    // + '&date='+$('.day_gregorian').text()
     if (writeCycles) {
-
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 10 == 0) {
         $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_indra_' + i + '"></div><div class="v-spacer"></div>');
@@ -246,34 +250,8 @@ const stringToDate = function (dateString) {
   return new Date(`${yyyy}-${mm}-${dd}`);
 };
 
-$(document).mouseup(function(e) 
-{
-    var container = $("#datetimepicker-wrapper");
 
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0) 
-    {
-        container.hide();
-    }
-});
 $(document).ready(function () {
-  $('#overview-btn').on('click', function () {
-    calendar.clear();
-    calendar.renderTotalCycles();
-    $('[data-toggle="tooltip"]').tooltip({ });
-  }); 
-  $('#projector_submit').on('click', function () {
-    $('#projector_results').html('');
-    projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
-    $('#projector_results').append('<hr>');
-    if (projector.error) {
-      $('#projector_results').append('<li>Позиции заданы неверно!</li>');
-    } else {
-      projector.dateList.forEach(element => {
-        $('#projector_results').append('<button class="btn btn-light mx-3 mb-3 projected_link"><div><strong>' + element.positions + '</strong></div>' + '<span class="projected_date">' + element.date + '</span></div></button>');
-      });
-    }
-  });
   var calendar = new CalendarView;
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
@@ -294,14 +272,28 @@ $(document).ready(function () {
     }
   });
 
-  $("button.calendar").toggle(function () {
-    $("#datetimepicker").datetimepicker("show");
-  }, function () {
-    $("#datetimepicker").datetimepicker("hide");
+  $('#overview-btn').on('click', function () {
+    calendar.clear();
+    calendar.renderTotalCycles();
+    $('[data-toggle="tooltip"]').tooltip({ });
+  }); 
+  $('#projector_submit').on('click', function () {
+    $('#projector_results').html('');
+    projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
+    $('#projector_results').append('<hr>');
+    if (projector.error) {
+      $('#projector_results').append('<li>Позиции заданы неверно!</li>');
+    } else {
+      projector.dateList.forEach(element => {
+        $('#projector_results').append('<button class="btn btn-light mx-3 mb-3 projected_link"><div><strong>' + element.positions + '</strong></div>' + '<span class="projected_date">' + element.date + '</span></div></button>');
+      });
+    }
   });
+
+  
   $('button.xdsoft_today_button').on('click', function () {
     var d = $('#datetimepicker').datetimepicker('getValue');
-    soma = new CalendarView(d);
+    calendar = new CalendarView(d);
   });
 
 

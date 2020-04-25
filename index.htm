@@ -21,7 +21,7 @@
   <div class="fixed-top m-3">
     <a href="javascript:void(0)" class="btn btn-light mb-2"
       onclick="var si = document.getElementById('datetimepicker-wrapper').style; si.display = (si.display=='none')?'block':'none';return false; ">
-    <i class="tiny material-icons ">alarm_on</i>
+    <i class="tiny material-icons">alarm_on</i>
       Выбрать
       дату</a>
     <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#projector_modal">
@@ -33,17 +33,14 @@
       <i class="material-icons">adjust</i>
       Обзор цикла
     </button>
-    <!-- <button type="button" id="planetarium-btn" class="mb-2 ml-1 btn btn-light" data-toggle="modal"
-      data-target="#overview_modal">
-      <i class="material-icons">brightness_7</i>
-      Планетарий
-      <i class="material-icons" style="
+    <a type="button" id="planetarium-btn" class="mb-2 ml-1 btn btn-light float-right" target="_blank">
+      <i class="material-icons tiny float-left" style="width: 25px; margin-right: 5px;">flare_bright</i>Планетарий<i class="tiny material-icons" style="
       float:right; 
-      padding-right: -15px;
+      padding-right: 10px;
       position: relative;
       right: -13px;
-      opacity: .3;">zoom_out_map</i> 
-    </button> -->
+      opacity: .3;">open_in_new</i> 
+    </a>
     <div id="datetimepicker-wrapper" style="display:none">
       <input type="text" id="datetimepicker" />
     </div>
@@ -222,6 +219,11 @@
           Агни
         </h2>
         <h2 class="day_agni">Не определено!</h2>
+      </div>
+    </div>
+    <div class="text-center">
+      <div class="text-center mt-5">
+        <h2 class="day_gregorian"></h2>
       </div>
     </div>
   </div>
