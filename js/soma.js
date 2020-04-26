@@ -302,7 +302,6 @@ $(document).ready(function () {
   $('body').on('click', 'button.projected_link', function () {
     var d = $(this).find('.projected_date').html();
     calendar = new CalendarView(new Date(stringToDate(d)));
-    // $('#datetimepicker').datetimepicker("setDate", stringToDate(d));
     $('#datetimepicker').datetimepicker({
       format: 'd.m.Y',
       minDate:'2018/04/28',
