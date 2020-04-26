@@ -150,7 +150,7 @@
 						console.log(result);
 					},
 					beforeSend: function (xhr) {
-						xhr.setRequestHeader ("Authorization", "Basic " + btoa(key + ":" + "api_token"));
+						xhr.setRequestHeader ("HTTP_AUTHORIZATION", "Basic " + btoa(key + ":" + "api_token"));
 					},
 				});
 				// console.log(hip_id,e.nearest);
