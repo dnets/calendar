@@ -255,8 +255,10 @@ $(document).ready(function () {
   var calendar = new CalendarView;
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
+    minDate:'2018/04/28',
     inline: true,
     lang: 'ru',
+    yearStart: 2018,
     timepicker: false,
     onChangeDateTime: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
@@ -303,7 +305,9 @@ $(document).ready(function () {
     // $('#datetimepicker').datetimepicker("setDate", stringToDate(d));
     $('#datetimepicker').datetimepicker({
       format: 'd.m.Y',
+      minDate:'2018/04/28',
       inline: true,
+      yearStart: 2018,
       lang: 'ru',
       value: stringToDate(d),
       timepicker: false,
