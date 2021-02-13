@@ -68,6 +68,7 @@ class CalendarView {
     $('.totalcycle_indra').html('');
     $('.totalcycle_agni').html('');
     $('.totalcycle_soma').html('');
+    $('.totalcycle_eightyfour').html('');
     $('.totalcycle_day_today').html('');
   }
 
