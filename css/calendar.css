@@ -49,22 +49,21 @@ h2 {
   text-shadow: -3px -3px 3px #000, 3px -3px 3px #000, -3px 3px 3px #000, 3px 3px 3px #000;
 }
 .totalcycle {
-  width: 420px;
-  height: 100px;
+  width: 100%;
   line-height: 10px;
   margin: 0 auto;
 }
-.totalcycle_indra {
-  width: 690px;
-  height: 100px;
+/* .totalcycle_indra {
+  width: ;
 }
 .totalcycle_soma {
-  width: 580px;
-  height: 100px;
+  width: ;
 }
 .totalcycle_agni {
-  width: 990px;
-  height: 100px;
+  width: ;
+ } */
+ .totalcycle_eightyfour {
+   margin-bottom: 30px;
  }
 .overview-cards-section img {
   width: 100px;

@@ -6,6 +6,7 @@ class CalendarSoma {
     this.agniCycleLength = 21;
     this.indraCycleLength = 30;
     this.somaCycleLength = 12;
+    this.eightyFourCycleLength = 84;
     this.totalCycleLength = 420;
     this.startDayAgni = 21;
     this.startDayIndra = 30;
@@ -35,10 +36,12 @@ class CalendarSoma {
   get indra() { return ((this.startDayIndra + this.daysPassed) % this.indraCycleLength) + 1; }
   get agni() { return ((this.startDayAgni + this.daysPassed) % this.agniCycleLength) + 1; }
   get soma() { return ((this.startDaySoma + this.daysPassed) % this.somaCycleLength) + 1; }
+  get eightyfour() { return ((this.startDayCycle + this.daysPassed) % this.eightyFourCycleLength) + 1; }
   get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength) || 420; }
   get somaCycle() { return Math.ceil((this.todayCycle / this.somaCycleLength)) || 20; }
   get indraCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 14; }
   get agniCycle() { return Math.ceil((this.todayCycle / this.agniCycleLength)) || 21; }
+  get eightyFourCycle() { return Math.ceil((this.todayCycle / this.eightyFourCycleLength)) || 84; }
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get direction() { return this.directions[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
@@ -57,7 +60,7 @@ class CalendarView {
     this.agniCard();
     this.indraCard();
     this.somaCard();
-    this.renderTotalCycles();
+    this.renderTotalCycles(false);
     $('.day_gregorian').text(''+this.calendar.date.toLocaleDateString('ru-RU')+'');
   }
 
@@ -107,45 +110,47 @@ class CalendarView {
     $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + this.calendar.somaCycle + ' цикла');
     $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + this.calendar.indraCycle + ' цикла');
     $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + this.calendar.agniCycle + ' цикла');
+    $('.totalcycle_day_eightyfour').html(this.calendar.eightyfour + ' день ' + this.calendar.eightyFourCycle + ' цикла');
     $('#planetarium-btn').attr('href', 'planetarium/embed.html?direction=' + this.calendar.direction +'&date=' + this.calendar.date.toString());
-    // + '&date='+$('.day_gregorian').text()
     if (writeCycles) {
     for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
-      if (i % 10 == 0) {
-        $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_indra_' + i + '"></div><div class="v-spacer"></div>');
+      if (i % 30 == 0) {
+        $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_indra_' + i + '"></div><br />');
       } else {
         $('.totalcycle_indra').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_indra_' + i + '"></div>');
       }
-    }
-    $('.totalcycle_indra_' + this.calendar.todayCycle).addClass('active');
-
-    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 12 == 0) {
-        $('.totalcycle_soma').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_soma_' + i + '"></div><div class="v-spacer"></div>');
+        $('.totalcycle_soma').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_soma_' + i + '"></div><br />');
       } else {
         $('.totalcycle_soma').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_soma_' + i + '"></div>');
       }
-    }
-    $('.totalcycle_soma_' + this.calendar.todayCycle).addClass('active');
-
-    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       if (i % 21 == 0) {
-        $('.totalcycle_agni').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_agni_' + i + '"></div><div class="v-spacer"></div>');
+        $('.totalcycle_agni').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_agni_' + i + '"></div><br />');
       } else {
         $('.totalcycle_agni').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_agni_' + i + '"></div>');
       }
+      if (i % 84 == 0) {
+        $('.totalcycle_eightyfour').append('<div data-toggle="tooltip" data-placement="top" class="square mr-1 totalcycle_eightyfour_' + i + '"></div><br />');
+      } else {
+        $('.totalcycle_eightyfour').append('<div data-toggle="tooltip" data-placement="top" class="square totalcycle_eightyfour_' + i + '"></div>');
+      }
     }
+    $('.totalcycle_eightyfour_' + this.calendar.todayCycle).addClass('active');
     $('.totalcycle_agni_' + this.calendar.todayCycle).addClass('active');
+    $('.totalcycle_indra_' + this.calendar.todayCycle).addClass('active');
+    $('.totalcycle_soma_' + this.calendar.todayCycle).addClass('active');
 
-    for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
+      for (var i = 1; i <= this.calendar.totalCycleLength; i++) {
       $(
         '.totalcycle_soma_' + i
         + ', .totalcycle_indra_' + i
         + ', .totalcycle_agni_' + i
+        + ', .totalcycle_eightyfour_' + i
       ).attr('data-date', this.calendar.addOrSubtractDays(this.calendar.date, Math.abs(i - this.calendar.todayCycle), i > this.calendar.todayCycle).toLocaleDateString('ru-RU'))
         .attr('data-soma', ((i - 1) % this.calendar.somaCycleLength) + 1)
         .attr('data-indra', ((i - 1) % this.calendar.indraCycleLength) + 1)
         .attr('data-agni', ((i - 1) % this.calendar.agniCycleLength) + 1)
+        .attr('data-eightyfour', ((i - 1) % this.calendar.eightyFourCycleLength) + 1)
         .attr('data-number', i);
 
       $('.totalcycle_soma_' + i).addClass(
@@ -183,6 +188,18 @@ class CalendarView {
         + $('.totalcycle_agni_' + i).attr('data-agni') + '\n'
         + $('.totalcycle_agni_' + i).attr('data-agni') + ' день '
         + (Math.ceil(i / this.calendar.agniCycleLength) || 20) + ' цикла'
+        );
+      $('.totalcycle_eightyfour_' + i).addClass(
+        'side'+ (i % 4)
+      );
+      $('.totalcycle_eightyfour_' + i).attr('title',
+        $('.totalcycle_eightyfour_' + i).data('date') + '\n'
+        + 'День ' + i + '\n'
+        + $('.totalcycle_eightyfour_' + i).attr('data-soma') + '.'
+        + $('.totalcycle_eightyfour_' + i).attr('data-indra') + '.'
+        + $('.totalcycle_eightyfour_' + i).attr('data-agni') + '\n'
+        + $('.totalcycle_eightyfour_' + i).attr('data-eightyfour') + ' день '
+        + (Math.ceil(i / this.calendar.eightyFourCycleLength) || 84) + ' цикла'
         );
       }
     }
