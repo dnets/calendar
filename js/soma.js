@@ -36,7 +36,7 @@ class CalendarSoma {
   get indra() { return ((this.startDayIndra + this.daysPassed) % this.indraCycleLength) + 1; }
   get agni() { return ((this.startDayAgni + this.daysPassed) % this.agniCycleLength) + 1; }
   get soma() { return ((this.startDaySoma + this.daysPassed) % this.somaCycleLength) + 1; }
-  get eightyfour() { return ((this.startDayCycle + this.daysPassed) % this.eightyFourCycleLength) + 1; }
+  get eightyfour() { return ((this.startDayCycle + this.daysPassed) % this.eightyFourCycleLength) || 84; }
   get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength) || 420; }
   get somaCycle() { return Math.ceil((this.todayCycle / this.somaCycleLength)) || 20; }
   get indraCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 14; }
@@ -296,7 +296,7 @@ $(document).ready(function () {
     calendar.clear();
     calendar.renderTotalCycles();
     $('[data-toggle="tooltip"]').tooltip({ });
-  }); 
+  });
   $('#projector_submit').on('click', function () {
     $('#projector_results').html('');
     projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
@@ -310,7 +310,7 @@ $(document).ready(function () {
     }
   });
 
-  
+
   $('button.xdsoft_today_button').on('click', function () {
     var d = $('#datetimepicker').datetimepicker('getValue');
     calendar = new CalendarView(d);
