@@ -1,11 +1,11 @@
 body {
-    background-image: url("https://source.unsplash.com/random/1900x1200/?amanita");
-    font-family: 'Source Sans Pro', sans-serif;
-    color: #fffff0;
-    background-color: #000;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+  background-image: url("https://source.unsplash.com/random/1900x1200/?amanita");
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #fffff0;
+  background-color: #000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 .projector, .overview {
   color: #000;
@@ -21,9 +21,9 @@ body {
   border: #e9d66b !important;
 }
 ul#projector_results {
-    list-style: none;
-    padding: 0;
-    font-size: 1.3em;
+  list-style: none;
+  padding: 0;
+  font-size: 1.3em;
 }
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
@@ -32,9 +32,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 canvas {
-    margin-right: auto;
-    margin-left: auto;
-    display: block;
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
 }
 #txt {
   font-size: 10em;
@@ -62,9 +62,9 @@ h2 {
 .totalcycle_agni {
   width: ;
  } */
- .totalcycle_eightyfour {
-   margin-bottom: 30px;
- }
+.totalcycle_eightyfour {
+  margin-bottom: 30px;
+}
 .overview-cards-section img {
   width: 100px;
   height: auto;
@@ -126,7 +126,7 @@ h2 {
   border: 1px solid #000;
 }
 .tooltip-inner {
-    white-space:pre-wrap;
+  white-space:pre-wrap;
 }
 .projector {
   color: #000;
@@ -164,4 +164,11 @@ img.tarot {
 }
 .modal-dialog {
   max-width: 1100px !important;
+}
+
+@media screen and (max-width: 990px) {
+  p {
+    margin-bottom: 0 !important;
+  }
+
 }
