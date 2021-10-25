@@ -7,6 +7,21 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+.fill-height {
+  min-height: 100vh;
+}
+.calendar-card {
+  text-align: center;
+}
+.calendar-card + .calendar-card {
+  margin-left: 10px;
+}
+.fill-height > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .projector, .overview {
   color: #000;
   background-color: #fff;
@@ -53,15 +68,7 @@ h2 {
   line-height: 10px;
   margin: 0 auto;
 }
-/* .totalcycle_indra {
-  width: ;
-}
-.totalcycle_soma {
-  width: ;
-}
-.totalcycle_agni {
-  width: ;
- } */
+
 .totalcycle_eightyfour {
   margin-bottom: 30px;
 }
@@ -148,14 +155,12 @@ h5 {
 }
 img.tarot {
   max-width: 210px;
+  width: 100%;
   border: 10px solid white;
   border-radius: 5px;
   box-shadow: 3px 3px 1px rgba(0,0,0,0.6);
 }
 .xdsoft_datetimepicker.xdsoft_noselect.xdsoft_dark.xdsoft_inline {
-  /* position: fixed;
-  top: 0;
-  right: 0; */
   border-radius: 5px;
 }
 .xdsoft_datetimepicker.xdsoft_inline {
@@ -164,11 +169,4 @@ img.tarot {
 }
 .modal-dialog {
   max-width: 1100px !important;
-}
-
-@media screen and (max-width: 990px) {
-  p {
-    margin-bottom: 0 !important;
-  }
-
 }
