@@ -67,8 +67,8 @@ class CalendarView {
   constructor(date = new Date) {
     this.calendar = new CalendarSoma(date);
     this.clear();
-    $('.day_indra').text(this.calendar.indra);
-    $('.day_agni').text(this.calendar.agni);
+    $('.day_indra').text(this.calendar.romanize(this.calendar.indra));
+    $('.day_agni').text(this.calendar.romanize(this.calendar.agni));
     $('.day_soma').text(this.calendar.soma);
     $('.day_tzolkin').text(this.calendar.tzolkin);
     $('.day_calendar').text(this.calendar.toString());
@@ -286,12 +286,39 @@ const stringToDate = function (dateString) {
 var Moon = {
   phases: ['new-moon', 'waxing-crescent-moon', 'first-quarter-moon', 'waxing-gibbous-moon', 'full-moon', 'waning-gibbous-moon', 'last-quarter-moon', 'waning-crescent-moon'],
   phaseNames: ['Новолуние', 'Молодая Луна', 'Первая четверть', 'Прибывающая Луна', 'Полнолуние', 'Убывающая Луна', 'Последняя четверть', 'Старая Луна'],
+  moonDay: function(moonDate) {
+    let year = moonDate.getFullYear();
+    let month = moonDate.getMonth() + 1;
+    let day = moonDate.getDate();
+
+    // 1. Год (четыре цифры) разделите на 19 и отбросьте целую часть результата. 
+    // 2. Эту дробь умножить на 209 и результат округлить до ближайшего целого.
+    lunarDay = Math.round(((year/19) - parseInt(year/19)) * 209); // Harvey formula
+    // 3. Прибавить месяц. Если это январь или февраль (1 или 2), то прибавить еще 12.
+    lunarDay += month;
+    if (month < 3) {
+      lunarDay += 12;
+    } 
+    // 4. Вычесть 3. (См. примечание)
+    lunarDay -= 3;
+    // 5. Прибавить дату месяца.
+    lunarDay += day;
+    // 6. Результат поделить на 30 и отбросить целую часть.
+    lunarDay /= 30;
+    lunarDay = lunarDay - parseInt(lunarDay);
+    // 7. Полученную десятичную дробь умножить на 30 и результат округлить до ближайшего целого.
+    lunarDay = Math.round(lunarDay * 30); 
+
+    return {name: `${lunarDay}й лунный день`};
+
+  },
+
   phase: function (moonDate) {
     let year = moonDate.getFullYear();
     let month = moonDate.getMonth() + 1;
     let day = moonDate.getDate();
     console.log(year, month, day);
-    let c = e = jd = b = 0;
+    let lunarDay = c = e = jd = b = 0;
 
     if (month < 3) {
       year--;
@@ -314,9 +341,11 @@ var Moon = {
 
 $(document).ready(function () {
   var calendar = new CalendarView;
-  var currentMoon = Moon.phase(calendar.calendar.currentDate);
-  $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
-  $('.moon-phase-text').text(currentMoon.name);
+  var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
+  var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
+  $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
+  $('.moon-phase-text').text(currentMoonPhase.name);
+  $('.moon-day-text').text(currentMoonDay.name);
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
     minDate:'2018/04/28',
@@ -327,23 +356,29 @@ $(document).ready(function () {
     onChangeDateTime: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
-      var currentMoon = Moon.phase(calendar.calendar.currentDate);
-      $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
-      $('.moon-phase-text').text(currentMoon.name);
+      var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
+      var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
+      $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
+      $('.moon-phase-text').text(currentMoonPhase.name);
+      $('.moon-day-text').text(currentMoonDay.name);
     },
     onChangeMonth: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
-      var currentMoon = Moon.phase(calendar.calendar.currentDate);
-      $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
-      $('.moon-phase-text').text(currentMoon.name);
+      var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
+    var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
+      $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
+      $('.moon-phase-text').text(currentMoonPhase.name);
+      $('.moon-day-text').text(currentMoonDay.name);
     },
     onChangeYear: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
-      var currentMoon = Moon.phase(calendar.calendar.currentDate);
-      $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
-      $('.moon-phase-text').text(currentMoon.name);
+      var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
+      var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
+      $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
+      $('.moon-phase-text').text(currentMoonPhase.name);
+      $('.moon-day-text').text(currentMoonDay.name);
     }
   });
 
@@ -369,6 +404,11 @@ $(document).ready(function () {
   $('button.xdsoft_today_button').on('click', function () {
     var d = $('#datetimepicker').datetimepicker('getValue');
     calendar = new CalendarView(d);
+    var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
+    var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
+    $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
+    $('.moon-phase-text').text(currentMoonPhase.name);
+    $('.moon-day-text').text(currentMoonDay.name);
   });
 
 
