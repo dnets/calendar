@@ -59,6 +59,7 @@ class CalendarSoma {
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get direction() { return this.directions[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
+  get currentDate() { return this.date; }
   toString() { return `${this.soma}.${this.romanize(this.indra)}.${this.romanize(this.agni)}`; }
 }
 
@@ -282,10 +283,40 @@ const stringToDate = function (dateString) {
   return new Date(`${yyyy}-${mm}-${dd}`);
 };
 
+var Moon = {
+  phases: ['new-moon', 'waxing-crescent-moon', 'first-quarter-moon', 'waxing-gibbous-moon', 'full-moon', 'waning-gibbous-moon', 'last-quarter-moon', 'waning-crescent-moon'],
+  phaseNames: ['Новолуние', 'Молодая Луна', 'Первая четверть', 'Прибывающая Луна', 'Полнолуние', 'Убывающая Луна', 'Последняя четверть', 'Старая Луна'],
+  phase: function (moonDate) {
+    let year = moonDate.getFullYear();
+    let month = moonDate.getMonth() + 1;
+    let day = moonDate.getDate();
+    console.log(year, month, day);
+    let c = e = jd = b = 0;
 
+    if (month < 3) {
+      year--;
+      month += 12;
+    }
+
+    ++month;
+    c = 365.25 * year;
+    e = 30.6 * month;
+    jd = c + e + day - 694039.09; // jd is total days elapsed
+    jd /= 29.5305882; // divide by the moon cycle
+    b = parseInt(jd); // int(jd) -> b, take integer part of jd
+    jd -= b; // subtract integer part to leave fractional part of original jd
+    b = Math.round(jd * 8); // scale fraction from 0-8 and round
+
+    if (b >= 8) b = 0; // 0 and 8 are the same so turn 8 into 0
+    return {phase: b, filename: Moon.phases[b], name: Moon.phaseNames[b]};
+  }
+};
 
 $(document).ready(function () {
   var calendar = new CalendarView;
+  var currentMoon = Moon.phase(calendar.calendar.currentDate);
+  $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
+  $('.moon-phase-text').text(currentMoon.name);
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
     minDate:'2018/04/28',
@@ -296,14 +327,23 @@ $(document).ready(function () {
     onChangeDateTime: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
+      var currentMoon = Moon.phase(calendar.calendar.currentDate);
+      $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
+      $('.moon-phase-text').text(currentMoon.name);
     },
     onChangeMonth: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
+      var currentMoon = Moon.phase(calendar.calendar.currentDate);
+      $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
+      $('.moon-phase-text').text(currentMoon.name);
     },
     onChangeYear: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
+      var currentMoon = Moon.phase(calendar.calendar.currentDate);
+      $('.moon-phase').attr('src', `img/moon/${currentMoon.filename}.png`);
+      $('.moon-phase-text').text(currentMoon.name);
     }
   });
 
