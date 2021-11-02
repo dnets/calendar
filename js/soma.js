@@ -293,13 +293,23 @@ var Moon = {
 
     // 1. Год (четыре цифры) разделите на 19 и отбросьте целую часть результата. 
     // 2. Эту дробь умножить на 209 и результат округлить до ближайшего целого.
-    lunarDay = Math.round(((year/19) - parseInt(year/19)) * 209); // Harvey formula
+    let lunarDay = Math.round(((year/19) - parseInt(year/19)) * 209); // Harvey formula
     // 3. Прибавить месяц. Если это январь или февраль (1 или 2), то прибавить еще 12.
     lunarDay += month;
     if (month < 3) {
       lunarDay += 12;
     } 
-    // 4. Вычесть 3. (См. примечание)
+    // 4. Вычесть коэффициент столетия. 
+    // Число столетий (первые две из четырех цифр года) поделить на 3 и отбросить дробную часть без округления.
+    let centuryCoefficientInitial = Number(year.toString().slice(0, 2));
+    let centuryCoefficientA = parseInt(centuryCoefficientInitial / 3);
+    let centuryCoefficientB = parseInt(centuryCoefficientInitial / 4);
+    let centuryCoefficient = centuryCoefficientA + centuryCoefficientB + 6;
+    centuryCoefficient -= centuryCoefficientInitial;
+    console.log(centuryCoefficient);
+    // Число столетий поделить на 4 и так же отбросить дробную часть без округления.
+    // Полученные два целых числа (от деления на 3 и на 4) сложить.
+    // Вычесть коэффициент столетия. 
     lunarDay -= 3;
     // 5. Прибавить дату месяца.
     lunarDay += day;
@@ -307,7 +317,7 @@ var Moon = {
     lunarDay /= 30;
     lunarDay = lunarDay - parseInt(lunarDay);
     // 7. Полученную десятичную дробь умножить на 30 и результат округлить до ближайшего целого.
-    lunarDay = Math.round(lunarDay * 30); 
+    lunarDay = Math.floor(lunarDay * 30) + 1; 
 
     return {name: `${lunarDay}й лунный день`};
 
