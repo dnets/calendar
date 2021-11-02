@@ -1,6 +1,7 @@
 class CalendarSoma {
   constructor(date = new Date) {
     this.date = date;
+    this.date.setHours(12,0,0,0);
     this.startDate = new Date("28 Apr 2018");
     this.daysPassed = this.daysBetween(this.startDate, this.date);
     this.agniCycleLength = 21;
@@ -260,12 +261,6 @@ class ProjectorDate {
         } else {
           this.target_agni = positions[2];
         }
-        // console.log(`Target soma: ${this.target_soma}`);
-        // console.log(`Target indra: ${this.target_indra}`);
-        // console.log(`Target agni: ${this.target_agni}`);
-        // console.log(`Current soma: ${this.soma_projected.soma}`);
-        // console.log(`Current indra: ${this.soma_projected.indra}`);
-        // console.log(`Current agni: ${this.soma_projected.agni}`);
       }
       while (
         (this.target_soma != this.soma_projected.soma) || (this.target_indra != this.soma_projected.indra) || (this.target_agni != this.soma_projected.agni));
@@ -299,16 +294,6 @@ var Moon = {
     if (month < 3) {
       lunarDay += 12;
     } 
-    // 4. Вычесть коэффициент столетия. 
-    // Число столетий (первые две из четырех цифр года) поделить на 3 и отбросить дробную часть без округления.
-    let centuryCoefficientInitial = Number(year.toString().slice(0, 2));
-    let centuryCoefficientA = parseInt(centuryCoefficientInitial / 3);
-    let centuryCoefficientB = parseInt(centuryCoefficientInitial / 4);
-    let centuryCoefficient = centuryCoefficientA + centuryCoefficientB + 6;
-    centuryCoefficient -= centuryCoefficientInitial;
-    console.log(centuryCoefficient);
-    // Число столетий поделить на 4 и так же отбросить дробную часть без округления.
-    // Полученные два целых числа (от деления на 3 и на 4) сложить.
     // Вычесть коэффициент столетия. 
     lunarDay -= 3;
     // 5. Прибавить дату месяца.
@@ -322,40 +307,65 @@ var Moon = {
     return {name: `${lunarDay}й лунный день`};
 
   },
-
   phase: function (moonDate) {
-    let year = moonDate.getFullYear();
-    let month = moonDate.getMonth() + 1;
-    let day = moonDate.getDate();
-    console.log(year, month, day);
-    let lunarDay = c = e = jd = b = 0;
-
-    if (month < 3) {
-      year--;
-      month += 12;
+    const LUNAR_MONTH = 29.530588853;
+    const getJulianDate = (date = new Date()) => {
+      const time = date.getTime();
+      const tzoffset = date.getTimezoneOffset()
+      
+      return (time / 86400000) - (tzoffset / 1440) + 2440587.5;
     }
-
-    ++month;
-    c = 365.25 * year;
-    e = 30.6 * month;
-    jd = c + e + day - 694039.09; // jd is total days elapsed
-    jd /= 29.5305882; // divide by the moon cycle
-    b = parseInt(jd); // int(jd) -> b, take integer part of jd
-    jd -= b; // subtract integer part to leave fractional part of original jd
-    b = Math.round(jd * 8); // scale fraction from 0-8 and round
-
-    if (b >= 8) b = 0; // 0 and 8 are the same so turn 8 into 0
-    return {phase: b, filename: Moon.phases[b], name: Moon.phaseNames[b]};
-  }
+    const normalize = value => {
+      value = value - Math.floor(value);
+      if (value < 0)
+        value = value + 1
+      return value;
+    }
+    const getLunarAgePercent = (date = new Date()) => {
+      return normalize((getJulianDate(date) - 2451550.1) / LUNAR_MONTH);
+    }
+    const getLunarAge = (date = new Date()) => {
+      const percent = getLunarAgePercent(date);
+      const age = percent * LUNAR_MONTH;
+      return age;
+    }
+    const getLunarPhasePercent = (date = new Date()) => {
+      const age = getLunarAgePercent(date) * 100;
+      const offsetBase = 3.386319199313448;
+      const offset = offsetBase/2;
+      const newMoon = 0;
+      const firstQuarter = 25;
+      const fullMoon = 50;
+      const secondQuarter = 75;
+      console.log(age);
+      if (age >= 100-offset || age <= newMoon+offset)
+        return 0;
+      else if (age > newMoon+offset && age < firstQuarter-offset)
+        return 1; 
+      else if (age >= firstQuarter-offset && age <= firstQuarter+offset)
+        return 2; 
+      else if (age > firstQuarter+offset && age < fullMoon-offset)
+        return 3; 
+      else if (age >= fullMoon-offset && age <= fullMoon+offset)
+        return 4; 
+      else if (age > fullMoon+offset && age < secondQuarter-offset)
+        return 5; 
+      else if (age >= secondQuarter-offset && age <= secondQuarter+offset)
+        return 6; 
+      else if (age > secondQuarter+offset && age < 100-offset)
+        return 7; 
+      return NaN;
+    }
+    return {age: Moon.moonDay(moonDate).name, filename: Moon.phases[getLunarPhasePercent(moonDate)], name: Moon.phaseNames[getLunarPhasePercent(moonDate)]};
+  },
 };
 
 $(document).ready(function () {
   var calendar = new CalendarView;
   var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
-  var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
   $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
   $('.moon-phase-text').text(currentMoonPhase.name);
-  $('.moon-day-text').text(currentMoonDay.name);
+  $('.moon-day-text').text(currentMoonPhase.age);
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
     minDate:'2018/04/28',
@@ -367,28 +377,25 @@ $(document).ready(function () {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
       var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
-      var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
       $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
       $('.moon-phase-text').text(currentMoonPhase.name);
-      $('.moon-day-text').text(currentMoonDay.name);
+      $('.moon-day-text').text(currentMoonPhase.age);
     },
     onChangeMonth: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
       var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
-    var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
       $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
       $('.moon-phase-text').text(currentMoonPhase.name);
-      $('.moon-day-text').text(currentMoonDay.name);
+      $('.moon-day-text').text(currentMoonPhase.age);
     },
     onChangeYear: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
       calendar = new CalendarView(d);
       var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
-      var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
       $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
       $('.moon-phase-text').text(currentMoonPhase.name);
-      $('.moon-day-text').text(currentMoonDay.name);
+      $('.moon-day-text').text(currentMoonPhase.age);
     }
   });
 
@@ -415,10 +422,9 @@ $(document).ready(function () {
     var d = $('#datetimepicker').datetimepicker('getValue');
     calendar = new CalendarView(d);
     var currentMoonPhase = Moon.phase(calendar.calendar.currentDate);
-    var currentMoonDay = Moon.moonDay(calendar.calendar.currentDate);
     $('.moon-phase').attr('src', `img/moon/${currentMoonPhase.filename}.png`);
     $('.moon-phase-text').text(currentMoonPhase.name);
-    $('.moon-day-text').text(currentMoonDay.name);
+    $('.moon-day-text').text(currentMoonPhase.age);
   });
 
 
