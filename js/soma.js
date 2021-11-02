@@ -24,6 +24,20 @@ class CalendarSoma {
     }
   }
 
+  romanize (num) {
+      if (isNaN(num))
+          return NaN;
+      var digits = String(+num).split(""),
+          key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+                "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+                "","I","II","III","IV","V","VI","VII","VIII","IX"],
+          roman = "",
+          i = 3;
+      while (i--)
+          roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+      return Array(+digits.join("") + 1).join("M") + roman;
+  }
+
   daysBetween(StartDate, EndDate) {
     // The number of milliseconds in all UTC days (no DST)
     const oneDay = 1000 * 60 * 60 * 24;
@@ -45,7 +59,7 @@ class CalendarSoma {
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get direction() { return this.directions[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
-  toString() { return `${this.soma}.${this.indra}.${this.agni}`; }
+  toString() { return `${this.soma}.${this.romanize(this.indra)}.${this.romanize(this.agni)}`; }
 }
 
 class CalendarView {
@@ -267,6 +281,7 @@ const stringToDate = function (dateString) {
   const [dd, mm, yyyy] = dateString.split(".");
   return new Date(`${yyyy}-${mm}-${dd}`);
 };
+
 
 
 $(document).ready(function () {
