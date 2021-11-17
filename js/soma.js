@@ -83,7 +83,8 @@ class CalendarView {
   constructor(date = new Date) {
     this.calendar = new CalendarSoma(date);
     this.clear();
-    $('.day_indra').text(this.calendar.romanize(this.calendar.indraWave));
+    $('.day_indra_wave').text(this.calendar.romanize(this.calendar.indraWave));
+    $('.day_indra').text(this.calendar.romanize(this.calendar.indra));
     $('.day_agni').text(this.calendar.romanize(this.calendar.agni));
     $('.day_soma').text(this.calendar.soma);
     $('.day_tzolkin').text(this.calendar.tzolkin);
