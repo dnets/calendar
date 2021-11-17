@@ -2,15 +2,18 @@ class CalendarSoma {
   constructor(date = new Date) {
     this.date = date;
     this.date.setHours(12,0,0,0);
-    this.startDate = new Date("28 Apr 2018");
+    this.oldStartDate = new Date("28 Apr 2018");
+    this.startDate = new Date("9 Oct 2021");
     this.daysPassed = this.daysBetween(this.startDate, this.date);
     this.agniCycleLength = 21;
     this.indraCycleLength = 30;
+    this.indraWaveCycleLength = 60;
     this.somaCycleLength = 12;
     this.eightyFourCycleLength = 84;
     this.totalCycleLength = 420;
     this.startDayAgni = 21;
     this.startDayIndra = 30;
+    this.startDayIndraWave = 60;
     this.startDaySoma = 12;
     this.startDayCycle = 1;
     this.suits = ['wands', 'cups', 'swords', 'pentacles'];
@@ -49,26 +52,38 @@ class CalendarSoma {
     return (start - end) / oneDay;
   }
   get indra() { return ((this.startDayIndra + this.daysPassed) % this.indraCycleLength) + 1; }
+  get indraWave() { 
+    let current = ((this.startDayIndraWave + this.daysPassed) % this.indraWaveCycleLength + 1); 
+    if (current == 30 || current === 31) return 30;
+    else if (current == 1 || current === 60) return 1;
+    else if (current > 30) {
+      return (60 - current + 1);
+    } 
+    else {
+      return current;
+    }
+  }
   get agni() { return ((this.startDayAgni + this.daysPassed) % this.agniCycleLength) + 1; }
   get soma() { return ((this.startDaySoma + this.daysPassed) % this.somaCycleLength) + 1; }
   get eightyfour() { return ((this.startDayCycle + this.daysPassed) % this.eightyFourCycleLength) || 84; }
   get todayCycle() { return ((this.startDayCycle + this.daysPassed) % this.totalCycleLength) || 420; }
   get somaCycle() { return Math.ceil((this.todayCycle / this.somaCycleLength)) || 20; }
   get indraCycle() { return Math.ceil((this.todayCycle / this.indraCycleLength)) || 14; }
+  get indraWaveCycle() { return Math.ceil((this.todayCycle / this.indraWaveCycleLength)) || 14; }
   get agniCycle() { return Math.ceil((this.todayCycle / this.agniCycleLength)) || 21; }
   get eightyFourCycle() { return Math.ceil((this.todayCycle / this.eightyFourCycleLength)) || 84; }
   get suit() { return this.suits[(this.soma - 1) % 4]; }
   get direction() { return this.directions[(this.soma - 1) % 4]; }
   get tzolkin() { return `${this.soma}.${this.agni}`; }
   get currentDate() { return this.date; }
-  toString() { return `${this.soma}.${this.romanize(this.indra)}.${this.romanize(this.agni)}`; }
+  toString() { return `${this.soma}.${this.romanize(this.indraWave)}.${this.romanize(this.agni)}`; }
 }
 
 class CalendarView {
   constructor(date = new Date) {
     this.calendar = new CalendarSoma(date);
     this.clear();
-    $('.day_indra').text(this.calendar.romanize(this.calendar.indra));
+    $('.day_indra').text(this.calendar.romanize(this.calendar.indraWave));
     $('.day_agni').text(this.calendar.romanize(this.calendar.agni));
     $('.day_soma').text(this.calendar.soma);
     $('.day_tzolkin').text(this.calendar.tzolkin);
@@ -90,21 +105,27 @@ class CalendarView {
 
   somaCard() {
     $('.card_soma, .card_soma_overview').attr('src', `img/tarot/minor/${this.calendar.suit}/${this.calendar.soma}.jpg`);
+    if (this.calendar.soma <= 10) {
+      $('.link_soma').attr('href', `http://psylib.org.ua/books/gomeb01/txt15.htm`);
+    } else {
+      $('.link_soma').attr('href', `http://psylib.org.ua/books/gomeb01/txt14.htm#5`);
+    }
   }
 
   indraCard() {
-    if (this.calendar.indra < 10) {
-      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indra}.htm`);
-    } else if (this.calendar.indra == 10) {
-      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra}.htm`);
-    } else if (this.calendar.indra <= 22) {
-      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indra}.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indra}.htm`);
-    } else if (this.calendar.indra <= 30) {
+    console.log(this.calendar.indraWave);
+    if (this.calendar.indraWave < 10) {
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indraWave}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indraWave}.htm`);
+    } else if (this.calendar.indraWave == 10) {
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indraWave}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indraWave}.htm`);
+    } else if (this.calendar.indraWave <= 22) {
+      $('.card_indra, .card_indra_overview').attr('src', `img/tarot/major/${this.calendar.indraWave}.jpg`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt${this.calendar.indraWave}.htm`);
+    } else if (this.calendar.indraWave <= 30) {
       $('.card_indra, .card_indra_overview').attr('src', `img/tarot/blank.jpg`);
-      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indra - 20}.htm`);
+      $('.link_indra').attr('href', `http://psylib.org.ua/books/shmak01/txt0${this.calendar.indraWave - 20}.htm`);
     }
   }
 
@@ -123,9 +144,9 @@ class CalendarView {
     this.indraCard();
     this.agniCard();
     $('.totalcycle_day_today').html('День ' + this.calendar.todayCycle);
-    $('.totalcycle_day_positions').html(this.calendar.soma+'.'+this.calendar.indra+'.'+this.calendar.agni);
+    $('.totalcycle_day_positions').html(this.calendar.soma+'.'+this.calendar.indraWave+'.'+this.calendar.agni);
     $('.totalcycle_day_soma').html(this.calendar.soma + ' день ' + this.calendar.somaCycle + ' цикла');
-    $('.totalcycle_day_indra').html(this.calendar.indra + ' день ' + this.calendar.indraCycle + ' цикла');
+    $('.totalcycle_day_indra').html(this.calendar.indraWave + ' день ' + this.calendar.indraWaveCycle + ' цикла');
     $('.totalcycle_day_agni').html(this.calendar.agni + ' день ' + this.calendar.agniCycle + ' цикла');
     $('.totalcycle_day_eightyfour').html(this.calendar.eightyfour + ' день ' + this.calendar.eightyFourCycle + ' цикла');
     $('#planetarium-btn').attr('href', 'planetarium/embed.html?direction=' + this.calendar.direction +'&date=' + this.calendar.date.toString());
@@ -165,7 +186,18 @@ class CalendarView {
         + ', .totalcycle_eightyfour_' + i
       ).attr('data-date', this.calendar.addOrSubtractDays(this.calendar.date, Math.abs(i - this.calendar.todayCycle), i > this.calendar.todayCycle).toLocaleDateString('ru-RU'))
         .attr('data-soma', ((i - 1) % this.calendar.somaCycleLength) + 1)
-        .attr('data-indra', ((i - 1) % this.calendar.indraCycleLength) + 1)
+        // .attr('data-indra', ((i - 1) % this.calendar.indraWaveCycleLength) + 1)
+        .attr('data-indra', (function () {
+        let current = (((i - 1) % 60) + 1);
+        if (current == 30 || current === 31) return 30;
+        else if (current == 1 || current === 60) return 1;
+        else if (current > 30) {
+          return (60 - current + 1);
+        } 
+        else {
+          return current;
+        }
+        })())
         .attr('data-agni', ((i - 1) % this.calendar.agniCycleLength) + 1)
         .attr('data-eightyfour', ((i - 1) % this.calendar.eightyFourCycleLength) + 1)
         .attr('data-number', i);
@@ -192,7 +224,7 @@ class CalendarView {
         + $('.totalcycle_indra_' + i).attr('data-indra') + '.'
         + $('.totalcycle_indra_' + i).attr('data-agni') + '\n'
         + $('.totalcycle_indra_' + i).attr('data-indra') + ' день '
-        + (Math.ceil(i / this.calendar.indraCycleLength) || 20) + ' цикла'
+        + (Math.ceil(i / this.calendar.indraWaveCycleLength) || 20) + ' цикла'
       );
       $('.totalcycle_agni_' + i).addClass(
         'side'+ (i % 4)
@@ -337,7 +369,6 @@ var Moon = {
       const firstQuarter = 25;
       const fullMoon = 50;
       const secondQuarter = 75;
-      console.log(age);
       if (age >= 100-offset || age <= newMoon+offset)
         return 0;
       else if (age > newMoon+offset && age < firstQuarter-offset)
@@ -368,10 +399,10 @@ $(document).ready(function () {
   $('.moon-day-text').text(currentMoonPhase.age);
   $('#datetimepicker').datetimepicker({
     format: 'd.m.Y',
-    minDate:'2018/04/28',
+    minDate:'2021/10/09',
     inline: true,
     lang: 'ru',
-    yearStart: 2018,
+    yearStart: 2021,
     timepicker: false,
     onChangeDateTime: function (ct, $i) {
       var d = $('#datetimepicker').datetimepicker('getValue');
@@ -433,9 +464,9 @@ $(document).ready(function () {
     calendar = new CalendarView(new Date(stringToDate(d)));
     $('#datetimepicker').datetimepicker({
       format: 'd.m.Y',
-      minDate:'2018/04/28',
+      minDate:'2021/10/09',
       inline: true,
-      yearStart: 2018,
+      yearStart: 2021,
       lang: 'ru',
       value: stringToDate(d),
       timepicker: false,
