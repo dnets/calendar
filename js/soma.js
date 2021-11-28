@@ -436,6 +436,14 @@ $(document).ready(function () {
     calendar.renderTotalCycles();
     $('[data-toggle="tooltip"]').tooltip({ });
   });
+  $('#fullscreen-btn').on('click', function () {
+    $('a.btn, button').hide();
+    $('html').fullscreen();
+  });
+  $('html').on(
+    'fscreenclose', function(event) {
+      $('a.btn, button').show();
+  });
   $('#projector_submit').on('click', function () {
     $('#projector_results').html('');
     projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));
