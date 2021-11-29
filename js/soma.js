@@ -93,6 +93,7 @@ class CalendarView {
     this.indraCard();
     this.somaCard();
     this.renderTotalCycles(false);
+    this.gregorian = date;
     $('.day_gregorian').text(''+this.calendar.date.toLocaleDateString('ru-RU')+'');
   }
 
@@ -285,7 +286,7 @@ class ProjectorDate {
           this.target_soma = positions[0];
         }
         if (positions[1] == 0) {
-          this.target_indra = this.soma_projected.indra;
+          this.target_indra = this.soma_projected.indraWave;
         } else {
           this.target_indra = positions[1];
         }
@@ -296,8 +297,8 @@ class ProjectorDate {
         }
       }
       while (
-        (this.target_soma != this.soma_projected.soma) || (this.target_indra != this.soma_projected.indra) || (this.target_agni != this.soma_projected.agni));
-      this.dates.push({ positions: `${this.soma_projected.soma}.${this.soma_projected.indra}.${this.soma_projected.agni}`, date: this.next_date.toLocaleDateString('ru-RU') });
+        (this.target_soma != this.soma_projected.soma) || (this.target_indra != this.soma_projected.indraWave) || (this.target_agni != this.soma_projected.agni));
+      this.dates.push({ positions: `${this.soma_projected.soma}.${this.soma_projected.indraWave}.${this.soma_projected.agni}`, date: this.next_date.toLocaleDateString('ru-RU') });
     }
   }
   get dateList() {
@@ -436,14 +437,55 @@ $(document).ready(function () {
     calendar.renderTotalCycles();
     $('[data-toggle="tooltip"]').tooltip({ });
   });
+  
+  $('body').on('click', '#screenshot-copy-btn', function(calendar) {
+    html2canvas(document.querySelector('.calendar'), {
+      windowWidth: screen.width,
+      windowHeight: screen.height,
+      useCORS: true,
+      imageTimeout: 0
+    }).then(canvas => { canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})])); }); 
+  });
+
+  $('#screenshot_width').val(screen.width);
+  $('#screenshot_height').val(screen.height);
+  function exportToImage(width, height, suffix=`${width}x${height}`, scale=window.devicePixelRatio) {
+    var filename = `${calendar.gregorian.toLocaleDateString({ day: "2-digit", month: "2-digit", year: "3-digit" }).replaceAll('.', '-')}-${suffix}.png`;
+    html2canvas(document.querySelector('.calendar'), {
+      windowWidth: width,
+      windowHeight: height,
+      useCORS: true,
+      scale: scale,
+      imageTimeout: 0
+    }).then(canvas => {
+      let downloadLink = document.createElement('a');
+      downloadLink.download = filename;
+      downloadLink.href = canvas.toDataURL();
+      downloadLink.click();
+      downloadLink.delete;
+    }
+    );
+  }
+  $('body').on('click', '.js-save-screenshot', function() {
+    exportToImage($('#screenshot_width').val(), $('#screenshot_height').val());
+  });
+  $('body').on('click', '.js-save-screenshot-1080', function() {
+    exportToImage(1920, 1080);
+  });
+  $('body').on('click', '.js-save-screenshot-fb-story', function() {
+    exportToImage(1080, 1920, 'FB');
+  });
+
   $('#fullscreen-btn').on('click', function () {
     $('a.btn, button').hide();
     $('html').fullscreen();
   });
+
   $('html').on(
     'fscreenclose', function(event) {
       $('a.btn, button').show();
   });
+
   $('#projector_submit').on('click', function () {
     $('#projector_results').html('');
     projector = new ProjectorDate([parseInt($('#projector_soma').val()), parseInt($('#projector_indra').val()), parseInt($('#projector_agni').val())], parseInt($('#projector_cycles').val()));

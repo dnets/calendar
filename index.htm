@@ -27,21 +27,21 @@
 <body>
   <!-- Button trigger modal -->
   <div class="fixed-top m-3">
-    <a href="javascript:void(0)" class="btn btn-light mb-2"
+    <a href="javascript:void(0)" class="btn btn-light mb-2" data-html2canvas-ignore
       onclick="var si = document.getElementById('datetimepicker-wrapper').style; si.display = (si.display=='none')?'block':'none';return false; ">
     <i class="tiny material-icons">alarm_on</i>
       Выбрать
       дату</a>
-    <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#projector_modal">
+    <button type="button" class="mb-2 ml-1 btn btn-light" data-toggle="modal" data-target="#projector_modal" data-html2canvas-ignore>
     <i class="tiny material-icons ">search</i>
       Поиск даты
     </button>
     <button type="button" id="overview-btn" class="mb-2 ml-1 btn btn-light" data-toggle="modal"
-      data-target="#overview_modal">
+      data-target="#overview_modal" data-html2canvas-ignore>
       <i class="material-icons">adjust</i>
       Обзор цикла
     </button>
-    <a type="button" id="planetarium-btn" class="mb-2 ml-1 btn btn-light float-right" target="_blank">
+    <a type="button" id="planetarium-btn" class="mb-2 ml-1 btn btn-light float-right" target="_blank" data-html2canvas-ignore>
       <i class="material-icons tiny float-left" style="width: 25px; margin-right: 5px;">flare_bright</i>Планетарий<i class="tiny material-icons" style="
       float:right; 
       padding-right: 10px;
@@ -49,10 +49,34 @@
       right: -13px;
       opacity: .3;">open_in_new</i> 
     </a>
-    <a type="button" id="fullscreen-btn" class="mb-2 ml-1 btn btn-light float-right" target="_blank">
-      <i class="material-icons tiny float-left" style="width: 25px; margin-right: 5px;">fullscreen</i>На весь экран
+    <a type="button" id="fullscreen-btn" class="mb-2 ml-1 btn btn-light float-right"  data-html2canvas-ignore>
+      <i class="material-icons tiny float-left" style="width: 25px;">fullscreen</i></a>
+      <div class="btn-group float-right" data-html2canvas-ignore>
+    <a type="button" id="screenshot-save-btn" class="js-save-screenshot ml-1 pr-0 btn btn-light" target="_blank" >
+      <i class="material-icons tiny text-center" style="width: 25px;">save_alt</i></a>
+    <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <div class="dropdown-menu save-form">
+    <form action="" class="form p-1">
+      <div class="form-group">
+        <i class="material-icons tiny mt-2 mr-1" style="transform: rotate(90deg)">height</i><input type="number" class="form-control" id="screenshot_width" placeholder="Ширина" />
+      </div>
+      <div class="form-group">
+        <i class="material-icons tiny mt-2 ml-1" style="margin-right: -2px;">height</i><input type="number" class="form-control" id="screenshot_height" placeholder="Высота"/>
+      </div>
+    <a type="button" class="js-save-screenshot btn btn-light w-100" >
+      <i class="material-icons tiny text-center" style="width: 25px;">save_alt</i>Скачать</a>
+    </form>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item js-save-screenshot-1080" href="#">1920x1080</a>
+    <a class="dropdown-item js-save-screenshot-fb-story" href="#">1080x1920</a>
+  </div>
+</div>
+    <a type="button" id="screenshot-copy-btn" class="mb-2 ml-1 btn btn-light float-right" target="_blank" data-html2canvas-ignore>
+      <i class="material-icons tiny float-left" style="width: 25px;">content_copy</i>
     </a>
-    <div id="datetimepicker-wrapper" style="display:none">
+    <div id="datetimepicker-wrapper" style="display:none" data-html2canvas-ignore>
       <input type="text" id="datetimepicker" />
     </div>
   </div>
@@ -193,7 +217,7 @@
 
 
   <div class="d-flex flex-column flex-grow  align-items-center fill-height calendar">
-    <div>
+    <div id="screenshot" class="m-2">
 
     <div class="">
       <h1>Календарь Сомы</h1>
@@ -269,7 +293,8 @@
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
   <script src="lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
-  <script src="lib\jquery.fullscreen.min.js"></script>
+  <script src="lib/jquery.fullscreen.min.js"></script>
+  <script src="lib/html2canvas.js"></script>
   <script src="js/soma.js"></script>
 
 </body>

@@ -1,7 +1,13 @@
 body {
-  background-image: url("https://source.unsplash.com/random/1900x1200/?amanita");
   font-family: 'Source Sans Pro', sans-serif;
   color: #fffff0;
+  background-color: #000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.calendar {
+  background-image: url("https://source.unsplash.com/random/1900x1200/?amanita");
   background-color: #000;
   background-size: cover;
   background-repeat: no-repeat;
@@ -230,4 +236,10 @@ img.tarot {
   height: 3px;
   bottom: 3px;
   left:-1px;
+}
+
+.save-form .form-group {
+}
+.save-form input {
+  width: 70%;
 }
