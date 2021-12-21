@@ -20,7 +20,7 @@ body {
   text-align: center;
 }
 .calendar-card + .calendar-card {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 .fill-height > div {
   flex: 1;
